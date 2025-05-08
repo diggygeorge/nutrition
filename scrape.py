@@ -6,43 +6,44 @@ from datetime import datetime
 
 date = datetime.today().strftime('%Y-%m-%d')
 
-food_dict = {}
-food_dict['locations'] = []
+food_list = []
 
 
 if True:
     locations = ['warren', 'west', 'marciano', 'granby']
-    i = 0
+    loc_index = 0
     for location in locations:
-        food_dict['locations'].extend([{"name": location, "mealtimes": []}])
         url = 'https://www.bu.edu/dining/location/' + location + '/#menu'
         page = requests.get(url)
         soup = BeautifulSoup(page.content, 'html.parser')
         today_menu = soup.find("ol", attrs={'data-menudate':date})
         mealtimes = ['breakfast', 'brunch', 'lunch', 'dinner']
-        j = 0
+        time_index = 0
         for time in mealtimes:
             today_meal = today_menu.find("li", class_="js-meal-period-" + time)
             if today_meal is not None:
-                food_dict['locations'][i]['mealtimes'].extend([{'meal': time, 'items': []}])
                 meals = today_meal.find_all("li", class_="menu-item")
-                k = 0
+                meal_index = 0
                 for meal in meals:
                     name = meal.find("h4", class_="menu-item-title")
                     table = meal.find("table", class_="nutrition-label")
                     if table is not None:
-                        food_dict['locations'][i]['mealtimes'][j]['items'].extend([{'name': name.get_text().replace("\'", ""), 'nutrients': [{}]}])
+                        item_dict = {
+                            'name': name.get_text().replace("\'", ""),
+                            'location': location,
+                            'mealtime': time
+                        }
                         sections = table.find_all("tr", class_=["nutrition-label-section", "nutrition-label-subsection"])
                         for section in sections:
                             nutrient = section.find("td", class_="nutrition-label-nutrient")
                             amount = section.find("td", class_="nutrition-label-amount")
-                            food_dict['locations'][i]['mealtimes'][j]['items'][k]['nutrients'][0][nutrient.get_text()] = amount.get_text().replace("g", "").replace("m", "")
-                        k += 1
-                j += 1
-        i += 1
+                            item_dict[nutrient.get_text().lower()]= float(amount.get_text().replace("g", "").replace("m", ""))
+                        food_list.extend([item_dict])
+                        meal_index += 1
+                print(location + "'s " + time + " items updated!")
+                time_index += 1
+        loc_index += 1
                             
-    food_dict['locations'].extend([{"name": 'fenway', "mealtimes": []}])
-
     url = 'https://bufenway.sodexomyway.com/en-us/locations/the-fenway-dining-hall'
     page = requests.get(url)
     soup = BeautifulSoup(page.content, 'html.parser')
@@ -55,34 +56,31 @@ if True:
     match = re.search(r"window.__PRELOADED_STATE__\s*=\s*(\{.*\})", script_content)
 
     if match:
-        i = 0
+        fenway_time_index = 0
         js_object_str = match.group(1)
         preloaded_state = json.loads(js_object_str)
         sections = preloaded_state['composition']['subject']['regions'][1]['fragments'][0]['content']['main']['sections']
         for section in sections:
-            food_dict['locations'][4]['mealtimes'].extend([{'meal': section['name'].lower(), 'items': []}])
             for group in section['groups']:
                 for item in group['items']:
-                    food_dict['locations'][4]['mealtimes'][i]['items'].extend(
-                    [{
-                        "name": item['formalName'],
-                        "nutrients": [
-                            {
-                                "Calories": item['calories'],
-                                "Total Fat": item['fat'].replace("g", ""),
-                                "Saturated Fat": item['saturatedFat'].replace("g", ""),
-                                "Trans Fat": item['transFat'].replace("g", ""),
-                                "Cholesterol": item['cholesterol'].replace("mg", ""),
-                                "Sodium": item['sodium'].replace("mg", ""),
-                                "Total Carbohydrate": item['carbohydrates'].replace("g", ""),
-                                "Dietary Fiber": item['dietaryFiber'].replace("g", ""),
-                                "Sugars": item['sugar'].replace("g", ""),
-                                "Protein": item['protein'].replace("g", "")
-                            }
-                        ]
+                    food_list.extend([{
+                        'name': item['formalName'].replace("\'", ""),
+                        'location': 'fenway',
+                        'mealtime': section['name'].lower(),
+                        "calories": float(item['calories']) if item['calories'] != "" else "",
+                        'total fat': float(item['fat'].replace("g", "")) if item['fat'] != "" else "",
+                        'saturated fat': float(item['saturatedFat'].replace("g", "")) if item['saturatedFat'] != "" else "",
+                        'trans fat': float(item['transFat'].replace("g", "")) if item['transFat'] != "" else "",
+                        'cholesterol': float(item['cholesterol'].replace("mg", "")) if item['cholesterol'] != "" else "",
+                        'sodium': float(item['sodium'].replace("mg", "")) if item['sodium'] != "" else "",
+                        'total carbohydrate': float(item['carbohydrates'].replace("g", "")) if item['carbohydrates'] != "" else "",
+                        'dietary fiber': float(item['dietaryFiber'].replace("g", "")) if item['dietaryFiber'] != "" else "",
+                        'sugars': float(item['sugar'].replace("g", "")) if item['sugar'] != "" else "",
+                        'protein': float(item['protein'].replace("g", "")) if item['protein'] != "" else ""
                     }])
-            i += 1
+            fenway_time_index += 1
     else:
         print("__PRELOADED_STATE__ not found.")
 
-print(food_dict)
+food_json = json.dumps(food_list)
+print(food_json)
