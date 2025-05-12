@@ -37,7 +37,7 @@ if True:
                         for section in sections:
                             nutrient = section.find("td", class_="nutrition-label-nutrient")
                             amount = section.find("td", class_="nutrition-label-amount")
-                            item_dict[nutrient.get_text().lower()]= float(amount.get_text().replace("g", "").replace("m", ""))
+                            item_dict[nutrient.get_text().lower().replace(" ", "")]= float(amount.get_text().replace("g", "").replace("m", ""))
                         food_list.extend([item_dict])
                         meal_index += 1
                 print(location + "'s " + time + " items updated!")
@@ -67,16 +67,16 @@ if True:
                         'name': item['formalName'].replace("\'", ""),
                         'location': 'fenway',
                         'mealtime': section['name'].lower(),
-                        "calories": float(item['calories']) if item['calories'] != "" else "",
-                        'total fat': float(item['fat'].replace("g", "")) if item['fat'] != "" else "",
-                        'saturated fat': float(item['saturatedFat'].replace("g", "")) if item['saturatedFat'] != "" else "",
-                        'trans fat': float(item['transFat'].replace("g", "")) if item['transFat'] != "" else "",
-                        'cholesterol': float(item['cholesterol'].replace("mg", "")) if item['cholesterol'] != "" else "",
-                        'sodium': float(item['sodium'].replace("mg", "")) if item['sodium'] != "" else "",
-                        'total carbohydrate': float(item['carbohydrates'].replace("g", "")) if item['carbohydrates'] != "" else "",
-                        'dietary fiber': float(item['dietaryFiber'].replace("g", "")) if item['dietaryFiber'] != "" else "",
-                        'sugars': float(item['sugar'].replace("g", "")) if item['sugar'] != "" else "",
-                        'protein': float(item['protein'].replace("g", "")) if item['protein'] != "" else ""
+                        "calories": float(item['calories']) if item['calories'] != "" else 0.0,
+                        'totalfat': float(item['fat'].replace("g", "")) if item['fat'] != "" else 0.0,
+                        'saturatedfat': float(item['saturatedFat'].replace("g", "")) if item['saturatedFat'] != "" else 0.0,
+                        'transfat': float(item['transFat'].replace("g", "")) if item['transFat'] != "" else 0.0,
+                        'cholesterol': float(item['cholesterol'].replace("mg", "")) if item['cholesterol'] != "" else 0.0,
+                        'sodium': float(item['sodium'].replace("mg", "")) if item['sodium'] != "" else 0.0,
+                        'totalcarbohydrate': float(item['carbohydrates'].replace("g", "")) if item['carbohydrates'] != "" else 0.0,
+                        'dietaryfiber': float(item['dietaryFiber'].replace("g", "")) if item['dietaryFiber'] != "" else 0.0,
+                        'sugars': float(item['sugar'].replace("g", "")) if item['sugar'] != "" else 0.0,
+                        'protein': float(item['protein'].replace("g", "")) if item['protein'] != "" else 0.0
                     }])
             fenway_time_index += 1
     else:
