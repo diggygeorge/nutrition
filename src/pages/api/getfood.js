@@ -15,18 +15,18 @@ export default async function handler(req, res) {
         const collection = database.collection("food");
         let data = []
         console.time("query")
-        if (sort === '0') {
+        if (sort === '0' || sort_nutrient === '') {
             data = await collection.find({$and: [{'mealtime': time}, {'location': location}]}).toArray();
         }
         else {
-            data = await collection.find({$and: [{'mealtime': time}, {'location': location}]}).sort({[sort_nutrient]: sort}).toArray();
+        data = await collection.find({$and: [{'mealtime': time}, {'location': location}]}).sort({[sort_nutrient]: sort}).toArray();
         }
         console.timeEnd("query")
         res.status(200).json(data);
     } 
     catch (error) {
         console.error("API Error:", error);
-        res.status(500).json({ message: "Something went wrong" });
+        res.status(500).json({ message: error });
     } 
     finally {
         await client.close();
