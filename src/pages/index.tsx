@@ -1,3 +1,4 @@
+import { ListItem } from '@mantine/core';
 import { ObjectId } from 'mongodb'
 import { useState, useEffect } from 'react';
 
@@ -19,6 +20,7 @@ interface FoodItem {
 }
 
 const cart = new Map()
+var cartInfo: FoodItem[] = []
 
 const Food = () => {
     let emptyItem: FoodItem[] = []
@@ -68,7 +70,6 @@ const Food = () => {
                             <h1><button onClick={() => {
                               if (cart.get(item.name) === undefined) {
                                 cart.set(item.name, 1)
-
                               }
                               else {
                                 cart.set(item.name, cart.get(item.name) + 1)
@@ -87,33 +88,46 @@ const Food = () => {
                                   protein: total.protein += item.protein
                                 }
                               )
-                              console.log(cart)}}>{item.name} {cart.get(item.name)}</button> {cart.get(item.name) !== undefined ? <button onClick={() => {
-                              if (cart.get(item.name) === 1) {
-                                cart.delete(item.name)
-                              }
-                              else {
-                                cart.set(item.name, cart.get(item.name) - 1)
-                              }
-                              setTotal(
-                                {
-                                  calories: total.calories -= item.calories,
-                                  totalfat: total.totalfat -= item.totalfat,
-                                  saturatedfat: total.saturatedfat -= item.saturatedfat,
-                                  transfat: total.transfat -= item.transfat,
-                                  cholesterol: total.cholesterol -= item.cholesterol,
-                                  sodium: total.sodium -= item.sodium,
-                                  totalcarbohydrate: total.totalcarbohydrate -= item.totalcarbohydrate,
-                                  dietaryfiber: total.dietaryfiber -= item.dietaryfiber,
-                                  sugars: total.sugars -= item.sugars,
-                                  protein: total.protein -= item.protein
-                                }
-                              )
-                              }}>Remove Item</button> : <></>}</h1>
+                              {if (cartInfo.indexOf(item) === -1) {cartInfo.push(item)
+                                                                 console.log(cartInfo)
+                              } }}}>{item.name}</button></h1>
                         </li>
                     ))}
                 </ul>
             </div>
-            <div className ="pt-5">
+            <div className="pt-5">
+              <h1>Cart:</h1>
+              <ul>
+              {cartInfo.map((item) => (
+                <li key = {item._id.toString()}>
+                <div>{item.name} {cart.get(item.name) > 1 ? <p>x {cart.get(item.name)}</p> : <></>}{cart.get(item.name) !== undefined ? <button onClick={() => {
+                  setTotal(
+                            {
+                              calories: total.calories -= item.calories,
+                              totalfat: total.totalfat -= item.totalfat,
+                              saturatedfat: total.saturatedfat -= item.saturatedfat,
+                              transfat: total.transfat -= item.transfat,
+                              cholesterol: total.cholesterol -= item.cholesterol,
+                              sodium: total.sodium -= item.sodium,
+                              totalcarbohydrate: total.totalcarbohydrate -= item.totalcarbohydrate,
+                              dietaryfiber: total.dietaryfiber -= item.dietaryfiber,
+                              sugars: total.sugars -= item.sugars,
+                              protein: total.protein -= item.protein
+                            }
+                          )
+                    if (cart.get(item.name) === 1) {
+                      cart.delete(item.name)
+                      let index = cartInfo.indexOf(item)
+                      cartInfo.splice(index, 1)
+                    }
+                    else {
+                      cart.set(item.name, cart.get(item.name) - 1)
+                    }
+                }}>Remove Item</button> : <></>}</div></li>
+              ))}
+              </ul>
+            </div>
+            <div className="pt-5">
               <h1>Total:</h1>
               <p>Calories: {total.calories}</p>
               <p>Total Fat: {total.totalfat}g</p>
