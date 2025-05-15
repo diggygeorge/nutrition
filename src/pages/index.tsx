@@ -42,7 +42,7 @@ const Food = () => {
 
 
     useEffect(() => {
-        fetch(`http://localhost:3001/api/getfood?location=${location}&time=${time}`)
+        fetch(`https://bu-nutrition.vercel.app/api/getfood?location=${location}&time=${time}`)
         .then((res) => (res.json()))
         .then((data) => {setFoodItems(data)})
     }, [location, time])
