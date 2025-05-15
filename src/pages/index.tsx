@@ -40,12 +40,20 @@ const Food = () => {
       protein: 0,
     })
 
+    const sortOptions = [0, -1, 1]
+    const [sortOptionIndex, setIndex] = useState(0)
+    const [sort, setSorted] = useState({
+      value: sortOptionIndex,
+      nutrient: ''
+    })
 
     useEffect(() => {
-        fetch(`https://bu-nutrition.vercel.app/api/getfood?location=${location}&time=${time}`)
+        fetch(`http://localhost:3001/api/getfood?location=${location}&time=${time}&nutrient=${sort.nutrient}&sort=${sort.value}`)
         .then((res) => (res.json()))
         .then((data) => {setFoodItems(data)})
-    }, [location, time])
+        console.log(fooditems)
+        console.log(sort)
+    }, [location, time, sort])
 
     return (
         <>
@@ -62,9 +70,19 @@ const Food = () => {
                 <button onClick={() => {setTime('brunch')}}>Brunch</button>
                 <button onClick={() => {setTime('dinner')}}>Dinner</button>
             </div>
+            <div>
+              {['Calories', 'Total Fat', 'Saturated Fat', 'Trans Fat', 'Cholesterol', 'Sodium', 'Total Carbohydrate', 'Dietary Fiber', 'Sugars', 'Protein'].map((item) => (
+                <button key = {item} className="pr-5" onClick={() => {setSorted({value: sort.value, nutrient: item.toLowerCase().replace(" ", "")})}}>{item}</button>
+              ))}
+              <button onClick={() => {setIndex((sortOptionIndex + 1) % 3)
+                                      setSorted({value: sortOptions[sortOptionIndex], nutrient: sort.nutrient})
+              }
+                                  }>Change Order</button>
+            </div>
             <div className="pt-5">
+              <h1>Menu:</h1>
                 <ul>
-                    {fooditems.map((item) => (
+                    {fooditems?.map((item) => (
                         <li key = {item._id.toString()}>
                             <h1><button onClick={() => {
                               if (cart.get(item.name) === undefined) {
@@ -127,7 +145,7 @@ const Food = () => {
               </ul>
             </div>
             <div className="pt-5">
-              <h1>Total:</h1>
+              <h1>Nutrition:</h1>
               <p>Calories: {total.calories}</p>
               <p>Total Fat: {total.totalfat}g</p>
               <p>Saturated Fat: {total.saturatedfat}g</p>
