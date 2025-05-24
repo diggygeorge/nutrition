@@ -9,8 +9,7 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Button, { ButtonProps } from '@mui/material/Button';
 import { red } from '@mui/material/colors';
 import { styled } from '@mui/material/styles';
-import { SnackbarProvider, VariantType, useSnackbar } from 'notistack';
-import IconButton from '@mui/material/IconButton';
+import { SnackbarProvider, useSnackbar } from 'notistack';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -65,7 +64,88 @@ const CartButton = styled(Button)<ButtonProps>(({ theme }) => ({
 }));
 
 const Food = () => {
-    const { enqueueSnackbar } = useSnackbar();
+    function AddToCartButton({item}: {item: FoodItem}) {
+      const { enqueueSnackbar } = useSnackbar();
+      return (
+      <>
+        <Accordion key = {item._id.toString()}  className="">
+          <AccordionSummary className="w-[750px] align-middle m-2 pt-4 pb-4 border-black border-2" expandIcon={<ExpandMoreIcon />}>
+            <Typography component="span">{item.name}</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Box className="pb-2">
+              <Typography>Calories: {item.calories}</Typography>
+              <Typography>Total Fat: {item.totalfat}g</Typography>
+              <Typography>Saturated Fat: {item.saturatedfat}g</Typography>
+              <Typography>Trans Fat: {item.transfat}g</Typography>
+              <Typography>Cholesterol: {item.cholesterol}mg</Typography>
+              <Typography>Sodium: {item.sodium}mg</Typography>
+              <Typography>Total Carbohydrate: {item.totalcarbohydrate}g</Typography>
+              <Typography>Dietary Fiber: {item.dietaryfiber}g</Typography>
+              <Typography>Sugars: {item.sugars}g</Typography>
+              <Typography>Protein: {item.protein}g</Typography>
+            </Box>
+            <CartButton onClick={() => {
+                enqueueSnackbar(`${item.name} added to Cart`, {variant: "success"});
+                if (cart.get(item.name) === undefined) {
+                  cart.set(item.name, 1)
+                }
+                else {
+                  cart.set(item.name, cart.get(item.name) + 1)
+                }
+                setTotal(
+                  {
+                    calories: total.calories += item.calories,
+                    totalfat: total.totalfat += item.totalfat,
+                    saturatedfat: total.saturatedfat += item.saturatedfat,
+                    transfat: total.transfat += item.transfat,
+                    cholesterol: total.cholesterol += item.cholesterol,
+                    sodium: total.sodium += item.sodium,
+                    totalcarbohydrate: total.totalcarbohydrate += item.totalcarbohydrate,
+                    dietaryfiber: total.dietaryfiber += item.dietaryfiber,
+                    sugars: total.sugars += item.sugars,
+                    protein: total.protein += item.protein
+                  }
+                )
+                {if (cartInfo.indexOf(item) === -1) {cartInfo.push(item)
+            }}
+                }}>Add to Cart</CartButton>
+          </AccordionDetails>
+        </Accordion>
+      </> )
+    }
+
+    function RemoveFromCartButton({item}: {item: FoodItem}) {
+      const { enqueueSnackbar } = useSnackbar();
+      return (
+      <Box className="flex justify-between"> <Box className="flex">{item.name} {cart.get(item.name) > 1 ? <p className="pl-1">x{cart.get(item.name)}</p> : <></>}</Box>{cart.get(item.name) !== undefined ? <button className="pl-1" onClick={() => {
+                      enqueueSnackbar(`${item.name} removed from Cart`, {variant: "error"});
+                      setTotal(
+                                {
+                                  calories: total.calories -= item.calories,
+                                  totalfat: total.totalfat -= item.totalfat,
+                                  saturatedfat: total.saturatedfat -= item.saturatedfat,
+                                  transfat: total.transfat -= item.transfat,
+                                  cholesterol: total.cholesterol -= item.cholesterol,
+                                  sodium: total.sodium -= item.sodium,
+                                  totalcarbohydrate: total.totalcarbohydrate -= item.totalcarbohydrate,
+                                  dietaryfiber: total.dietaryfiber -= item.dietaryfiber,
+                                  sugars: total.sugars -= item.sugars,
+                                  protein: total.protein -= item.protein
+                                }
+                              )
+                        if (cart.get(item.name) === 1) {
+                          cart.delete(item.name)
+                          let index = cartInfo.indexOf(item)
+                          cartInfo.splice(index, 1)
+                        }
+                        else {
+                          cart.set(item.name, cart.get(item.name) - 1)
+                        }
+                    }}> Remove Item</button>
+                                  : <></>}</Box>)
+    }
+    
 
     let emptyItem: FoodItem[] = []
     const [fooditems, setFoodItems] = useState<FoodItem[]>(emptyItem);
@@ -103,7 +183,7 @@ const Food = () => {
       <SnackbarProvider maxSnack={3}>
         <Box className="flex flex-col h-screen bg-white">
             <Box className="bg-[#be030f] p-2">
-              <h1 className="text-3xl">My Fitness Terrier</h1>
+              <h1 className="text-3xl text-white">My Fitness Terrier</h1>
             </Box>
             <Box className="flex flex-grow overflow-auto no-scrollbar">
               <Box className="bg-white w-[16.5%] pt-4 h-full">
@@ -150,97 +230,29 @@ const Food = () => {
                   </Box>
                 </Card>
               </Box>
-              <Box className="pt-5 w-[50.5%] overflow-auto bg-white">
-                <h1 className="text-black">Menu:</h1>
-                
+              <Box className="pt-5 w-[50.5%] bg-white overflow-auto ">
+                <h1 className="text-black text-xl pb-3">Menu:</h1>
                 <Box className="">
                   <ul>
                       {fooditems?.map((item) => (
-                          <Accordion key = {item._id.toString()}  className="">
-                            <AccordionSummary className="w-[750px] align-middle m-2 pt-4 pb-4 border-black border-2" expandIcon={<ExpandMoreIcon />}>
-                              <Typography component="span">{item.name}</Typography>
-                            </AccordionSummary>
-                            <AccordionDetails>
-                              <Box className="pb-2">
-                                <Typography>Calories: {item.calories}</Typography>
-                                <Typography>Total Fat: {item.totalfat}g</Typography>
-                                <Typography>Saturated Fat: {item.saturatedfat}g</Typography>
-                                <Typography>Trans Fat: {item.transfat}g</Typography>
-                                <Typography>Cholesterol: {item.cholesterol}mg</Typography>
-                                <Typography>Sodium: {item.sodium}mg</Typography>
-                                <Typography>Total Carbohydrate: {item.totalcarbohydrate}g</Typography>
-                                <Typography>Dietary Fiber: {item.dietaryfiber}g</Typography>
-                                <Typography>Sugars: {item.sugars}g</Typography>
-                                <Typography>Protein: {item.protein}g</Typography>
-                              </Box>
-                              <CartButton onClick={() => {
-                                  enqueueSnackbar(`${item.name} added to Cart`);
-                                  if (cart.get(item.name) === undefined) {
-                                    cart.set(item.name, 1)
-                                  }
-                                  else {
-                                    cart.set(item.name, cart.get(item.name) + 1)
-                                  }
-                                  setTotal(
-                                    {
-                                      calories: total.calories += item.calories,
-                                      totalfat: total.totalfat += item.totalfat,
-                                      saturatedfat: total.saturatedfat += item.saturatedfat,
-                                      transfat: total.transfat += item.transfat,
-                                      cholesterol: total.cholesterol += item.cholesterol,
-                                      sodium: total.sodium += item.sodium,
-                                      totalcarbohydrate: total.totalcarbohydrate += item.totalcarbohydrate,
-                                      dietaryfiber: total.dietaryfiber += item.dietaryfiber,
-                                      sugars: total.sugars += item.sugars,
-                                      protein: total.protein += item.protein
-                                    }
-                                  )
-                                  {if (cartInfo.indexOf(item) === -1) {cartInfo.push(item)
-                              }}
-                                  }}>Add to Cart</CartButton>
-                            </AccordionDetails>
-                          </Accordion>
+                            <AddToCartButton item={item}/>
                       ))}
                   </ul>
                 </Box>
               </Box>
-              <Box className="block w-[33%] relative">
-                <Box className="pt-5 m-auto text-black">
-                  <h1 className="text-center">Cart:</h1>
+              <Box className="block w-[33%] pl-2 pr-2 relative">
+                <Box className="pt-5 text-black">
+                  <h1 className="text-center text-xl pb-3">Cart:</h1>
                   <ul>
                   {cartInfo.map((item) => (
                     <li key = {item._id.toString()}>
-                    <Box className="flex justify-between"> <Box className="flex">{item.name} {cart.get(item.name) > 1 ? <p className="pl-1">x{cart.get(item.name)}</p> : <></>}</Box>{cart.get(item.name) !== undefined ? <button className="pl-1" onClick={() => {
-                      enqueueSnackbar(`${item.name} removed from Cart`);
-                      setTotal(
-                                {
-                                  calories: total.calories -= item.calories,
-                                  totalfat: total.totalfat -= item.totalfat,
-                                  saturatedfat: total.saturatedfat -= item.saturatedfat,
-                                  transfat: total.transfat -= item.transfat,
-                                  cholesterol: total.cholesterol -= item.cholesterol,
-                                  sodium: total.sodium -= item.sodium,
-                                  totalcarbohydrate: total.totalcarbohydrate -= item.totalcarbohydrate,
-                                  dietaryfiber: total.dietaryfiber -= item.dietaryfiber,
-                                  sugars: total.sugars -= item.sugars,
-                                  protein: total.protein -= item.protein
-                                }
-                              )
-                        if (cart.get(item.name) === 1) {
-                          cart.delete(item.name)
-                          let index = cartInfo.indexOf(item)
-                          cartInfo.splice(index, 1)
-                        }
-                        else {
-                          cart.set(item.name, cart.get(item.name) - 1)
-                        }
-                    }}> Remove Item</button>
-                                  : <></>}</Box></li>
+                      <RemoveFromCartButton item={item}/>
+                    </li>
                   ))}
                   </ul>
                 </Box>
-                <Card className="text-black absolute bottom-0">
-                  <h1>Nutrition:</h1>
+                <Card className="text-black absolute bottom-0 w-full text-center">
+                  <h1 className="text-xl pb-3">Nutrition:</h1>
                   <p>Calories: {total.calories}</p>
                   <p>Total Fat: {total.totalfat}g</p>
                   <p>Saturated Fat: {total.saturatedfat}g</p>
