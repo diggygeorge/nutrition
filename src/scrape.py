@@ -8,7 +8,7 @@ import pymongo
 from dotenv import load_dotenv
 import os
 
-load_dotenv()
+load_dotenv(dotenv_path=".env.local")
 
 database_url = os.getenv("MONGODB_URI")
 myclient = pymongo.MongoClient(database_url)
@@ -94,5 +94,7 @@ else:
     print("__PRELOADED_STATE__ not found.")
 
 # Deletes the old data in the collection and replaces it with the new one.
-mycollection.delete_many({})
-mycollection.insert_many(food_list)
+x = mycollection.delete_many({})
+print(x.deleted_count, " documents deleted.")
+x = mycollection.insert_many(food_list)
+print("Data updated successfully!")
