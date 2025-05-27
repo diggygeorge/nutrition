@@ -175,7 +175,7 @@ const Food = () => {
     })
 
     useEffect(() => {
-        fetch(`http://localhost:3001/api/getfood?location=${location}&time=${time}&nutrient=${sort.nutrient}&sort=${sort.value}`)
+        fetch(`https://bu-nutrition.vercel.app/api/getfood?location=${location}&time=${time}&nutrient=${sort.nutrient}&sort=${sort.value}`)
         .then((res) => (res.json()))
         .then((data) => {setFoodItems(data)})
     }, [location, time, sort])
