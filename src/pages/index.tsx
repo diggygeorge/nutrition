@@ -89,11 +89,11 @@ const Food = () => {
             </Box>
             <CartButton onClick={() => {
                 enqueueSnackbar(`${item.name} added to Cart`, {variant: "success"});
-                if (cart.get(item.name) === undefined) {
-                  cart.set(item.name, 1)
+                if (cart.get(item._id) === undefined) {
+                  cart.set(item._id, 1)
                 }
                 else {
-                  cart.set(item.name, cart.get(item.name) + 1)
+                  cart.set(item._id, cart.get(item._id) + 1)
                 }
                 setTotal(
                   {
@@ -111,7 +111,7 @@ const Food = () => {
                 )
                 {if (cartInfo.indexOf(item) === -1) {cartInfo.push(item)
             }}
-                }}>Add to Cart</CartButton>
+                console.log(cartInfo)}}>Add to Cart</CartButton>
           </AccordionDetails>
         </Accordion>
       </> )
@@ -120,7 +120,7 @@ const Food = () => {
     function RemoveFromCartButton({item}: {item: FoodItem}) {
       const { enqueueSnackbar } = useSnackbar();
       return (
-      <Box className="flex justify-between"> <Box className="flex">{item.name} {cart.get(item.name) > 1 ? <p className="pl-1">x{cart.get(item.name)}</p> : <></>}</Box>{cart.get(item.name) !== undefined ? <button className="pl-1" onClick={() => {
+      <Box className="flex justify-between"> <Box className="flex">{item.name} - {item.location.charAt(0).toUpperCase() + item.location.slice(1)} {cart.get(item._id) > 1 ? <p className="pl-1">x{cart.get(item._id)}</p> : <></>}</Box>{cart.get(item._id) !== undefined ? <button className="pl-1" onClick={() => {
                       enqueueSnackbar(`${item.name} removed from Cart`, {variant: "error"});
                       setTotal(
                                 {
@@ -136,15 +136,16 @@ const Food = () => {
                                   protein: total.protein -= item.protein
                                 }
                               )
-                        if (cart.get(item.name) === 1) {
-                          cart.delete(item.name)
+                        if (cart.get(item._id) === 1) {
+                          cart.delete(item._id)
                           let index = cartInfo.indexOf(item)
                           cartInfo.splice(index, 1)
                         }
                         else {
-                          cart.set(item.name, cart.get(item.name) - 1)
+                          cart.set(item._id, cart.get(item._id) - 1)
                         }
-                    }}> Remove Item</button>
+                    }
+                  }> Remove Item</button>
                                   : <></>}</Box>)
     }
     
@@ -167,18 +168,16 @@ const Food = () => {
     })
 
     const sortOptions = [0, -1, 1]
-    const [sortOptionIndex, setIndex] = useState(0)
+    const [sortOptionIndex, setIndex] = useState(sortOptions[0])
     const [sort, setSorted] = useState({
       value: sortOptionIndex,
       nutrient: ''
     })
 
     useEffect(() => {
-        fetch(`https://bu-nutrition.vercel.app/api/getfood?location=${location}&time=${time}&nutrient=${sort.nutrient}&sort=${sort.value}`)
+        fetch(`http://localhost:3001/api/getfood?location=${location}&time=${time}&nutrient=${sort.nutrient}&sort=${sort.value}`)
         .then((res) => (res.json()))
         .then((data) => {setFoodItems(data)})
-        console.log(fooditems)
-        console.log(sort)
     }, [location, time, sort])
 
     return (
@@ -209,7 +208,7 @@ const Food = () => {
                     </TextField>
                   </Box>
                   
-                  <Box className="pb-10 pr-2 pl-2">
+                  <Box className="pb-3 pr-2 pl-2">
                       <ToggleButtonGroup size="small" orientation="vertical" value={sort.nutrient} exclusive onChange={(event: React.MouseEvent<HTMLElement>, next: string) => {setSorted({value: sort.value, nutrient: next.toLowerCase().replace(" ", "")})}}>
                         <Box className="grid grid-cols-2 gap-2">
                           {['Calories', 'Total Fat', 'Saturated Fat', 'Trans Fat', 'Cholesterol', 'Sodium', 'Total Carbohydrate', 'Dietary Fiber', 'Sugars', 'Protein'].map((item) => (
@@ -226,6 +225,7 @@ const Food = () => {
                     <Box className="pt-2 border-black border-3">
                       <Button variant="outlined" color="error" className="w-full text-red-100" onClick={() => {
                                               setIndex((sortOptionIndex + 1) % 3)
+                                              console.log(sortOptionIndex)
                                               setSorted({value: sortOptions[sortOptionIndex], nutrient: sort.nutrient})
                                             }
                                       }>{sort.value === -1 ? 'High to Low' : sort.value === 1 ? 'Low to High' : 'No Order'}</Button>
@@ -242,10 +242,11 @@ const Food = () => {
                   <Box>
                     <ul>
                         {fooditems?.map((item) => (
-                              <AddToCartButton item={item}/>
+                              <AddToCartButton key = {item._id.toString()} item={item}/>
                         ))}
                     </ul>
                   </Box>
+                  {fooditems.length === 0 ? <h1 className="font-body text-black pt-4">There seems to be no menu items at the moment.  Please select a different dining hall or time.</h1> : <></>}
                 </Box>
               </Box>
               <Box className="flex flex-col w-[33%]">
