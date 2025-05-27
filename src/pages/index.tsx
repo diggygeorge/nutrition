@@ -71,11 +71,11 @@ const Food = () => {
       return (
       <>
         <Accordion key = {item._id.toString()}  className="">
-          <AccordionSummary className="w-[750px] align-middle m-2 pt-4 pb-4 border-black border-2" expandIcon={<ExpandMoreIcon />}>
-            <Typography component="span">{item.name}</Typography>
+          <AccordionSummary className="w-[750px] align-middle m-2 pt-4 pb-4" expandIcon={<ExpandMoreIcon />}>
+            <h1 className="font-body">{item.name}</h1>
           </AccordionSummary>
           <AccordionDetails>
-            <Box className="pb-2">
+            <Box className="grid grid-cols-2 pb-2">
               <Typography>Calories: {item.calories}</Typography>
               <Typography>Total Fat: {item.totalfat}g</Typography>
               <Typography>Saturated Fat: {item.saturatedfat}g</Typography>
@@ -174,7 +174,7 @@ const Food = () => {
     })
 
     useEffect(() => {
-        fetch(`http://localhost:3001/api/getfood?location=${location}&time=${time}&nutrient=${sort.nutrient}&sort=${sort.value}`)
+        fetch(`https://bu-nutrition.vercel.app/api/getfood?location=${location}&time=${time}&nutrient=${sort.nutrient}&sort=${sort.value}`)
         .then((res) => (res.json()))
         .then((data) => {setFoodItems(data)})
         console.log(fooditems)
@@ -194,7 +194,7 @@ const Food = () => {
                     <TextField select label="Dining Hall" onChange={(e) => {setLocation(e.target.value.toLowerCase())}} defaultValue="Warren" helperText="Select your choice dining hall.">
                       {['Warren', 'West', 'Marciano', 'Granby', 'Fenway'].map((option) => (
                         <MenuItem key={option} value={option}>
-                          {option}
+                          <h1 className="font-body">{option}</h1>
                         </MenuItem>
                       ))}
                     </TextField>
@@ -203,7 +203,7 @@ const Food = () => {
                     <TextField select label="Mealtime" onChange={(e) => {setTime(e.target.value.toLowerCase())}} defaultValue="Breakfast" helperText="Select your mealtime.">
                       {['Breakfast', 'Lunch', 'Brunch', 'Dinner'].map((option) => (
                         <MenuItem key={option} value={option}>
-                          {option}
+                          <h1 className="font-body">{option}</h1>
                         </MenuItem>
                       ))}
                     </TextField>
@@ -235,7 +235,7 @@ const Food = () => {
               </Box>
               <Box className="pt-5 w-[50.5%] bg-white flex flex-col">
                 <Box className="w-full">
-                  <h1 className="text-black text-xl pb-3 bg-white font-medium">Menu:</h1>
+                  <h1 className="text-black text-xl pb-3 bg-white font-medium">Menu</h1>
                 </Box>
                 <Divider/>
                 <Box className="overflow-y-auto">
@@ -251,7 +251,7 @@ const Food = () => {
               <Box className="flex flex-col w-[33%]">
                 <Box className="flex flex-col pt-5 text-black h-[59%]">
                   <Box>
-                    <h1 className="text-center text-xl pb-3 font-medium">Cart:</h1>
+                    <h1 className="text-center text-xl pb-3 font-medium">Cart</h1>
                   </Box>
                   <Divider/>
                   <Box className="overflow-auto">
@@ -262,8 +262,8 @@ const Food = () => {
                   ))}
                   </Box>
                 </Box>
-                <Box className="text-black w-full text-center">
-                  <h1 className="text-xl pb-3">Nutrition:</h1>
+                <Box className="font-body text-black w-full text-center">
+                  <h1 className="text-xl pb-3">Nutrition</h1>
                   <p>Calories: {total.calories}</p>
                   <p>Total Fat: {total.totalfat}g</p>
                   <p>Saturated Fat: {total.saturatedfat}g</p>
