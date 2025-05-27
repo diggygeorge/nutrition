@@ -1,0 +1,17 @@
+# Menu items are updated each day at 4:44 UTC.
+name: Update Food
+
+on:
+  schedule:
+    - cron: '44 4 * * *'
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Web Scrape
+    # Clones repository
+    - uses: actions/checkout@v4
+    - run: |
+        cd src
+        python scrape.py
