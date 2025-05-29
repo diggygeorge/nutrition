@@ -9,8 +9,12 @@ jobs:
     runs-on: ubuntu-latest
     name: Web Scrape
     steps:
-    - uses: actions/checkout@v4
     # Clones repository
+    - uses: actions/checkout@v4
+    # Sets up Python
+    - uses: actions/setup-python@v5 
+      with:
+        python-version: '3.12.1'
     - run: |
         cd src
         python scrape.py
