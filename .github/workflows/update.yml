@@ -2,8 +2,7 @@
 name: Update Food
 
 on:
-  schedule:
-    - cron: '44 4 * * *'
+  push:
 
 jobs:
   scrape:
