@@ -8,10 +8,10 @@ on:
 jobs:
   scrape:
     runs-on: ubuntu-latest
+    name: Web Scrape
     steps:
-    - name: Web Scrape
-    # Clones repository
     - uses: actions/checkout@v4
+    # Clones repository
     - run: |
         cd src
         python scrape.py
