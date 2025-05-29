@@ -16,7 +16,7 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
-
+import Image from 'next/image';
 
 interface FoodItem {
     _id: ObjectId;
@@ -175,16 +175,18 @@ const Food = () => {
     })
 
     useEffect(() => {
-        fetch(`https://bu-nutrition.vercel.app/api/getfood?location=${location}&time=${time}&nutrient=${sort.nutrient}&sort=${sort.value}`)
+        fetch(`http://localhost:3001/api/getfood?location=${location}&time=${time}&nutrient=${sort.nutrient}&sort=${sort.value}`)
         .then((res) => (res.json()))
         .then((data) => {setFoodItems(data)})
     }, [location, time, sort])
 
     return (
       <SnackbarProvider maxSnack={3}>
+      <title>MyFitnessTerrier</title>
         <Box className="flex flex-col h-screen bg-white">
-            <Box className="bg-[#be030f] p-2">
-              <h1 className="text-3xl text-white font-medium">MyFitnessTerrier</h1>
+            <Box className="flex bg-[#be030f]">
+              <h1 className="text-3xl text-white font-medium p-2">MyFitnessTerrier</h1>
+              <Image src="/myfitnessterrierlogo.png" alt="logo" width={50} height={50}></Image>
             </Box>
             <Box className="flex flex-grow overflow-auto">
               <Box className="bg-white w-[16.5%] pt-4 h-full">
