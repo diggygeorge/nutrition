@@ -3,6 +3,8 @@ name: Update Food
 
 on:
   push:
+    branches:
+      main
 
 jobs:
   scrape:
