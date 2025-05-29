@@ -24,5 +24,6 @@ jobs:
     - run: |
         cd src
         python scrape.py
+      # Connection string
       env:
         MONGODB_URI: ${{ secrets.MONGODB_URI }}
