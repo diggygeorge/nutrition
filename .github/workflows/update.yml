@@ -18,7 +18,7 @@ jobs:
     # Installs requirements
     - run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        pip install -r C:/Users/danny/Documents/GitHub/nutrition/src/requirements.txt
     - run: |
         cd src
         python scrape.py
