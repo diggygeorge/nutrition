@@ -121,7 +121,7 @@ const Food = () => {
       const { enqueueSnackbar } = useSnackbar();
       return (
       <Box className="flex justify-between"> <Box className="flex">{item.name} - {item.location.charAt(0).toUpperCase() + item.location.slice(1)} {cart.get(item._id) > 1 ? <p className="pl-1">x{cart.get(item._id)}</p> : <></>}</Box>{cart.get(item._id) !== undefined ? <button className="pl-1" onClick={() => {
-                      enqueueSnackbar(`${item.name} removed from Cart`, {variant: "error"});
+                      enqueueSnackbar(`${item.name} removed!`, {variant: "error"});
                       setTotal(
                                 {
                                   calories: total.calories -= item.calories,
