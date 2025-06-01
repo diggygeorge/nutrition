@@ -111,7 +111,7 @@ const Food = () => {
                 )
                 {if (cartInfo.indexOf(item) === -1) {cartInfo.push(item)
             }}
-                console.log(cartInfo)}}>Add to Cart</CartButton>
+                console.log(cartInfo)}}>Add</CartButton>
           </AccordionDetails>
         </Accordion>
       </> )
@@ -254,7 +254,7 @@ const Food = () => {
               <Box className="flex flex-col w-[33%]">
                 <Box className="flex flex-col pt-5 text-black h-[59%]">
                   <Box>
-                    <h1 className="text-center text-xl pb-3 font-medium">Cart</h1>
+                    <h1 className="text-center text-xl pb-3 font-medium">Items</h1>
                   </Box>
                   <Divider/>
                   <Box className="overflow-auto">
