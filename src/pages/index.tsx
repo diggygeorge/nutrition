@@ -88,7 +88,7 @@ const Food = () => {
               <Typography>Protein: {item.protein}g</Typography>
             </Box>
             <CartButton onClick={() => {
-                enqueueSnackbar(`${item.name} added to Cart`, {variant: "success"});
+                enqueueSnackbar(`${item.name} added!`, {variant: "success"});
                 if (cart.get(item._id) === undefined) {
                   cart.set(item._id, 1)
                 }
