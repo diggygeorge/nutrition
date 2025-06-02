@@ -9,7 +9,6 @@ from dotenv import load_dotenv
 import os
 
 load_dotenv(dotenv_path=".env.local")
-
 database_url = os.getenv("MONGODB_URI")
 print(database_url)
 myclient = pymongo.MongoClient(database_url)
@@ -22,6 +21,8 @@ food_list = []
 
 # Finds foods and their nutrition values for warren, west, marciano, and granby.
 locations = ['warren', 'west', 'marciano', 'granby']
+dietary_restrictions = ['vegetarian', 'vegan', 'halal', 'gluten-free', 'egg', 'fish', 'milk', 'peanuts', 'sesame', 'shellfish', 'soy', 'tree-nuts', 'wheat']
+
 loc_index = 0
 for location in locations:
     url = 'https://www.bu.edu/dining/location/' + location + '/#menu'
@@ -44,11 +45,26 @@ for location in locations:
                         'location': location,
                         'mealtime': time
                     }
+                    filtergroup = meal.find("ul", class_="menu-item-dietary-restriction")
+                    filters = filtergroup.find_all("li")
+                    for filter in filters:
+                        item_dict[filter['class'][0]] = True
+
+                    allergy_section = meal.find("aside", class_="nutrition-facts-restrictions")
+                    if allergy_section.p is None:
+                        allergygroup = meal.find("ul", class_="nutrition-facts-allergens")
+                        allergies = allergygroup.find_all("li")
+                        for allergy in allergies:
+                            item_dict[allergy['class'][0]] = True
+
                     sections = table.find_all("tr", class_=["nutrition-label-section", "nutrition-label-subsection"])
                     for section in sections:
                         nutrient = section.find("td", class_="nutrition-label-nutrient")
                         amount = section.find("td", class_="nutrition-label-amount")
                         item_dict[nutrient.get_text().lower().replace(" ", "")]= float(amount.get_text().replace("g", "").replace("m", ""))
+                    for restriction in dietary_restrictions:
+                        if restriction not in item_dict:
+                            item_dict[restriction] = False
                     food_list.extend([item_dict])
                     meal_index += 1
             print(location + "'s " + time + " items updated!")
@@ -94,6 +110,7 @@ if match:
 else:
     print("__PRELOADED_STATE__ not found.")
 
+print(food_list)
 # Deletes the old data in the collection and replaces it with the new one.
 x = mycollection.delete_many({})
 print(x.deleted_count, " documents deleted.")
