@@ -88,7 +88,7 @@ const Food = () => {
               <Typography>Protein: {item.protein}g</Typography>
             </Box>
             <CartButton onClick={() => {
-                enqueueSnackbar(`${item.name} added to Cart`, {variant: "success"});
+                enqueueSnackbar(`${item.name} added!`, {variant: "success"});
                 if (cart.get(item._id) === undefined) {
                   cart.set(item._id, 1)
                 }
@@ -111,7 +111,7 @@ const Food = () => {
                 )
                 {if (cartInfo.indexOf(item) === -1) {cartInfo.push(item)
             }}
-                console.log(cartInfo)}}>Add to Cart</CartButton>
+                console.log(cartInfo)}}>Add</CartButton>
           </AccordionDetails>
         </Accordion>
       </> )
@@ -121,7 +121,7 @@ const Food = () => {
       const { enqueueSnackbar } = useSnackbar();
       return (
       <Box className="flex justify-between"> <Box className="flex">{item.name} - {item.location.charAt(0).toUpperCase() + item.location.slice(1)} {cart.get(item._id) > 1 ? <p className="pl-1">x{cart.get(item._id)}</p> : <></>}</Box>{cart.get(item._id) !== undefined ? <button className="pl-1" onClick={() => {
-                      enqueueSnackbar(`${item.name} removed from Cart`, {variant: "error"});
+                      enqueueSnackbar(`${item.name} removed!`, {variant: "error"});
                       setTotal(
                                 {
                                   calories: total.calories -= item.calories,
@@ -254,7 +254,7 @@ const Food = () => {
               <Box className="flex flex-col w-[33%]">
                 <Box className="flex flex-col pt-5 text-black h-[59%]">
                   <Box>
-                    <h1 className="text-center text-xl pb-3 font-medium">Cart</h1>
+                    <h1 className="text-center text-xl pb-3 font-medium">Items</h1>
                   </Box>
                   <Divider/>
                   <Box className="overflow-auto">
