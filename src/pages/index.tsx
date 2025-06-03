@@ -306,6 +306,7 @@ const Food = () => {
                         </Select>
                       </FormControl>
                     </Box>
+                    <Divider/>
                     <h1 className="font-body text-center text-gray-500 pb-1">Sort by Nutrient</h1>
                       <ToggleButtonGroup size="small" orientation="vertical" value={sort.nutrient} exclusive onChange={(event: React.MouseEvent<HTMLElement>, next: string) => {setSorted({value: sort.value, nutrient: next.toLowerCase().replace(" ", "")})}}>
                         <Box className="grid grid-cols-2 gap-2">
