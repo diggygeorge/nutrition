@@ -10,7 +10,6 @@ import os
 
 load_dotenv(dotenv_path=".env.local")
 database_url = os.getenv("MONGODB_URI")
-print(database_url)
 myclient = pymongo.MongoClient(database_url)
 mydb = myclient["dininghall"]
 mycollection = mydb["food"]
