@@ -17,6 +17,14 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import Image from 'next/image';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
+import ListItemText from '@mui/material/ListItemText';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 interface FoodItem {
     _id: ObjectId;
@@ -173,12 +181,53 @@ const Food = () => {
       value: sortOptionIndex,
       nutrient: ''
     })
+    const [isVegetarian, setIsVegetarian] = useState(false)
+    const [isVegan, setIsVegan] = useState(false)
+    const [isHalal, setIsHalal] = useState(false)
+    const [isGlutenfree, setIsGlutenfree] = useState(false)
+    const [hasEgg, setHasEgg] = useState(false)
+    const [hasFish, setHasFish] = useState(false)
+    const [hasMilk, setHasMilk] = useState(false)
+    const [hasPeanuts, setHasPeanuts] = useState(false)
+    const [hasSesame, setHasSesame] = useState(false)
+    const [hasShellfish, setHasShellfish] = useState(false)
+    const [hasSoy, setHasSoy] = useState(false)
+    const [hasTreenuts, setHasTreenuts] = useState(false)
+    const [hasWheat, setHasWheat] = useState(false)
+
+    const ITEM_HEIGHT = 48;
+      const ITEM_PADDING_TOP = 8;
+      const MenuProps = {
+        PaperProps: {
+          style: {
+            maxHeight: ITEM_HEIGHT * 3.5 + ITEM_PADDING_TOP,
+            width: 150,
+          },
+        },
+      };
+    const [dietGroup, setDietGroup] = useState<string[]>([])
+
+    const handleDietChange = (event: SelectChangeEvent<typeof dietGroup>) => {
+      let {
+        target: { value },
+      } = event;
+      setDietGroup(typeof value === 'string' ? value.split(',') : value);
+    };
+
+    const [allergyGroup, setAllergyGroup] = useState<string[]>([])
+
+    const handleAllergyChange = (event: SelectChangeEvent<typeof allergyGroup>) => {
+      let {
+        target: { value },
+      } = event;
+      setAllergyGroup(typeof value === 'string' ? value.split(',') : value);
+    };
 
     useEffect(() => {
-        fetch(`/api/getfood?location=${location}&time=${time}&nutrient=${sort.nutrient}&sort=${sort.value}`)
+        fetch(`/api/getfood?location=${location}&time=${time}&nutrient=${sort.nutrient}&sort=${sort.value}&isVegetarian=${isVegetarian}&isVegan=${isVegan}&isHalal=${isHalal}&isGlutenfree=${isGlutenfree}&noEgg=${hasEgg}&noFish=${hasFish}&noMilk=${hasMilk}&noPeanuts=${hasPeanuts}&noSesame=${hasSesame}&noShellfish=${hasShellfish}&noSoy=${hasSoy}&noTreenuts=${hasTreenuts}&noWheat=${hasWheat}`)
         .then((res) => (res.json()))
         .then((data) => {setFoodItems(data)})
-    }, [location, time, sort])
+    }, [location, time, sort, isVegetarian, isVegan, isHalal, isGlutenfree, hasEgg, hasFish, hasMilk, hasPeanuts, hasShellfish, hasSoy, hasTreenuts, hasWheat])
 
     return (
       <SnackbarProvider maxSnack={3}>
@@ -189,10 +238,10 @@ const Food = () => {
               <Image src="/myfitnessterrierlogo.png" alt="logo" width={50} height={50}></Image>
             </Box>
             <Box className="flex flex-grow overflow-auto">
-              <Box className="bg-white w-[16.5%] pt-4 h-full">
+              <Box className="bg-white w-[18.5%] pt-4 h-full">
                 <Card className="m-2">
-                  <Box className="p-4">
-                    <TextField select label="Dining Hall" onChange={(e) => {setLocation(e.target.value.toLowerCase())}} defaultValue="Warren" helperText="Select your choice dining hall.">
+                  <Box className="pl-2 pr-2 pt-2 pb-2">
+                    <TextField className="w-full" select label="Dining Hall" onChange={(e) => {setLocation(e.target.value.toLowerCase())}} defaultValue="Warren">
                       {['Warren', 'West', 'Marciano', 'Granby', 'Fenway'].map((option) => (
                         <MenuItem key={option} value={option}>
                           <h1 className="font-body">{option}</h1>
@@ -200,8 +249,8 @@ const Food = () => {
                       ))}
                     </TextField>
                   </Box>
-                  <Box className="p-4">
-                    <TextField select label="Mealtime" onChange={(e) => {setTime(e.target.value.toLowerCase())}} defaultValue="Breakfast" helperText="Select your mealtime.">
+                  <Box className="pl-2 pr-2 pt-2">
+                    <TextField className="w-full" select label="Mealtime" onChange={(e) => {setTime(e.target.value.toLowerCase())}} defaultValue="Breakfast">
                       {['Breakfast', 'Lunch', 'Brunch', 'Dinner'].map((option) => (
                         <MenuItem key={option} value={option}>
                           <h1 className="font-body">{option}</h1>
@@ -210,7 +259,74 @@ const Food = () => {
                     </TextField>
                   </Box>
                   
-                  <Box className="pb-3 pr-2 pl-2">
+                  <Box className="pb-2 pr-2 pl-2">
+                    <Box className="pt-2">
+                      <FormControl sx={{width: 1}}>
+                        <InputLabel>Select dietary restrictions...</InputLabel>
+                        <Select multiple value={dietGroup} onChange={handleDietChange} input={<OutlinedInput label="Diet" />} renderValue = {(selected) => selected.join(", ")} MenuProps={MenuProps}>
+                          <MenuItem value="Vegetarian">
+                            <Checkbox checked={dietGroup.includes("Vegetarian")} onChange={() => setIsVegetarian(!isVegetarian)}/>
+                            <ListItemText primary={"Vegetarian"}/>
+                          </MenuItem>
+                          <MenuItem value="Vegan">
+                            <Checkbox checked={dietGroup.includes("Vegan")} onChange={() => setIsVegan(!isVegan)}/>
+                            <ListItemText primary={"Vegan"}/>
+                          </MenuItem>
+                          <MenuItem value="Halal">
+                            <Checkbox checked={dietGroup.includes("Halal")} onChange={() => setIsHalal(!isHalal)}/>
+                            <ListItemText primary={"Halal"}/>
+                          </MenuItem>
+                          <MenuItem value="Gluten Free">
+                            <Checkbox checked={dietGroup.includes("Gluten Free")} onChange={() => setIsGlutenfree(!isGlutenfree)}/>
+                            <ListItemText primary={"Gluten Free"}/>
+                          </MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Box>
+                    <Box className="pt-2 pb-2">
+                      <FormControl sx={{width: 1}}>
+                        <InputLabel>Select allergies...</InputLabel>
+                        <Select multiple value={allergyGroup} onChange={handleAllergyChange} input={<OutlinedInput label="Allergy" />} renderValue = {(selected) => selected.join(", ")} MenuProps={MenuProps}>
+                          <MenuItem value="Egg">
+                            <Checkbox checked={allergyGroup.includes("Egg")} onChange={() => setHasEgg(!hasEgg)}/>
+                            <ListItemText primary={"Egg"}/>
+                          </MenuItem>
+                          <MenuItem value="Fish">
+                            <Checkbox checked={allergyGroup.includes("Fish")} onChange={() => setHasFish(!hasFish)}/>
+                            <ListItemText primary={"Fish"}/>
+                          </MenuItem>
+                          <MenuItem value="Milk">
+                            <Checkbox checked={allergyGroup.includes("Milk")} onChange={() => setHasMilk(!hasMilk)}/>
+                            <ListItemText primary={"Milk"}/>
+                          </MenuItem>
+                          <MenuItem value="Peanuts">
+                            <Checkbox checked={allergyGroup.includes("Peanuts")} onChange={() => setHasPeanuts(!hasPeanuts)}/>
+                            <ListItemText primary={"Peanuts"}/>
+                          </MenuItem>
+                          <MenuItem value="Sesame">
+                            <Checkbox checked={allergyGroup.includes("Sesame")} onChange={() => setHasSesame(!hasSesame)}/>
+                            <ListItemText primary={"Sesame"}/>
+                          </MenuItem>
+                          <MenuItem value="Shellfish">
+                            <Checkbox checked={allergyGroup.includes("Shellfish")} onChange={() => setHasShellfish(!hasShellfish)}/>
+                            <ListItemText primary={"Shellfish"}/>
+                          </MenuItem>
+                          <MenuItem value="Soy">
+                            <Checkbox checked={allergyGroup.includes("Soy")} onChange={() => setHasSoy(!hasSoy)}/>
+                            <ListItemText primary={"Soy"}/>
+                          </MenuItem>
+                          <MenuItem value="Tree Nuts">
+                            <Checkbox checked={allergyGroup.includes("Tree Nuts")} onChange={() => setHasTreenuts(!hasTreenuts)}/>
+                            <ListItemText primary={"Tree Nuts"}/>
+                          </MenuItem>
+                          <MenuItem value="Wheat">
+                            <Checkbox checked={allergyGroup.includes("Wheat")} onChange={() => setHasWheat(!hasWheat)}/>
+                            <ListItemText primary={"Wheat"}/>
+                          </MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Box>
+                    <h1 className="font-body text-center text-gray-500 pb-1">Sort by Nutrient</h1>
                       <ToggleButtonGroup size="small" orientation="vertical" value={sort.nutrient} exclusive onChange={(event: React.MouseEvent<HTMLElement>, next: string) => {setSorted({value: sort.value, nutrient: next.toLowerCase().replace(" ", "")})}}>
                         <Box className="grid grid-cols-2 gap-2">
                           {['Calories', 'Total Fat', 'Saturated Fat', 'Trans Fat', 'Cholesterol', 'Sodium', 'Total Carbohydrate', 'Dietary Fiber', 'Sugars', 'Protein'].map((item) => (
@@ -230,12 +346,12 @@ const Food = () => {
                                               console.log(sortOptionIndex)
                                               setSorted({value: sortOptions[sortOptionIndex], nutrient: sort.nutrient})
                                             }
-                                      }>{sort.value === -1 ? 'High to Low' : sort.value === 1 ? 'Low to High' : 'No Order'}</Button>
+                                      }>{sort.value === -1 ? 'High > Low' : sort.value === 1 ? 'Low > High' : 'No Order'}</Button>
                     </Box>
                   </Box>
                 </Card>
               </Box>
-              <Box className="pt-5 w-[50.5%] bg-white flex flex-col">
+              <Box className="pt-5 w-[48.5%] bg-white flex flex-col">
                 <Box className="w-full">
                   <h1 className="text-black text-xl pb-3 bg-white font-medium">Menu</h1>
                 </Box>
@@ -248,7 +364,7 @@ const Food = () => {
                         ))}
                     </ul>
                   </Box>
-                  {fooditems.length === 0 ? <h1 className="font-body text-black pt-4">There seems to be no menu items at the moment.  Please select a different dining hall or time.</h1> : <></>}
+                  {fooditems.length === 0 ? (isVegetarian || isVegan || isHalal || isGlutenfree || hasEgg || hasFish || hasMilk || hasPeanuts || hasSesame || hasShellfish || hasSoy || hasTreenuts || hasWheat) ? <h1 className="font-body text-black pt-4">Sorry, no menu items meet these filters.  Please choose less or different restrictions.</h1> : <h1 className="font-body text-black pt-4">Sorry, there seems to be no menu items at the moment.  Please select a different dining hall or time.</h1> : <></>}
                 </Box>
               </Box>
               <Box className="flex flex-col w-[33%]">
@@ -257,7 +373,7 @@ const Food = () => {
                     <h1 className="text-center text-xl pb-3 font-medium">Items</h1>
                   </Box>
                   <Divider/>
-                  <Box className="overflow-auto">
+                  <Box className="overflow-auto pl-2 pr-2">
                   {cartInfo.map((item) => (
                     <h1 key = {item._id.toString()}>
                       <RemoveFromCartButton item={item}/>
