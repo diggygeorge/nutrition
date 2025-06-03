@@ -211,8 +211,16 @@ const Food = () => {
       let {
         target: { value },
       } = event;
+      console.log(event.target.value)
       setDietGroup(typeof value === 'string' ? value.split(',') : value);
     };
+
+    useEffect(() => {
+      setIsVegan(dietGroup.includes("Vegan"));
+      setIsHalal(dietGroup.includes("Halal"));
+      setIsVegetarian(dietGroup.includes("Vegetarian"));
+      setIsGlutenfree(dietGroup.includes("Gluten Free"));
+    }, [dietGroup]);
 
     const [allergyGroup, setAllergyGroup] = useState<string[]>([])
 
@@ -222,6 +230,18 @@ const Food = () => {
       } = event;
       setAllergyGroup(typeof value === 'string' ? value.split(',') : value);
     };
+
+    useEffect(() => {
+      setHasEgg(allergyGroup.includes("Egg"));
+      setHasFish(allergyGroup.includes("Fish"));
+      setHasMilk(allergyGroup.includes("Milk"));
+      setHasPeanuts(allergyGroup.includes("Peanuts"));
+      setHasSesame(allergyGroup.includes("Sesame"));
+      setHasShellfish(allergyGroup.includes("Shellfish"));
+      setHasSoy(allergyGroup.includes("Soy"));
+      setHasTreenuts(allergyGroup.includes("Tree Nuts"));
+      setHasWheat(allergyGroup.includes("Wheat"));
+    }, [allergyGroup]);
 
     useEffect(() => {
         fetch(`/api/getfood?location=${location}&time=${time}&nutrient=${sort.nutrient}&sort=${sort.value}&isVegetarian=${isVegetarian}&isVegan=${isVegan}&isHalal=${isHalal}&isGlutenfree=${isGlutenfree}&noEgg=${hasEgg}&noFish=${hasFish}&noMilk=${hasMilk}&noPeanuts=${hasPeanuts}&noSesame=${hasSesame}&noShellfish=${hasShellfish}&noSoy=${hasSoy}&noTreenuts=${hasTreenuts}&noWheat=${hasWheat}`)
@@ -265,19 +285,19 @@ const Food = () => {
                         <InputLabel>Select dietary restrictions...</InputLabel>
                         <Select multiple value={dietGroup} onChange={handleDietChange} input={<OutlinedInput label="Diet" />} renderValue = {(selected) => selected.join(", ")} MenuProps={MenuProps}>
                           <MenuItem value="Vegetarian">
-                            <Checkbox checked={dietGroup.includes("Vegetarian")} onChange={() => setIsVegetarian(!isVegetarian)}/>
+                            <Checkbox checked={dietGroup.includes("Vegetarian")}/>
                             <ListItemText primary={"Vegetarian"}/>
                           </MenuItem>
                           <MenuItem value="Vegan">
-                            <Checkbox checked={dietGroup.includes("Vegan")} onChange={() => setIsVegan(!isVegan)}/>
+                            <Checkbox checked={dietGroup.includes("Vegan")}/>
                             <ListItemText primary={"Vegan"}/>
                           </MenuItem>
                           <MenuItem value="Halal">
-                            <Checkbox checked={dietGroup.includes("Halal")} onChange={() => setIsHalal(!isHalal)}/>
+                            <Checkbox checked={dietGroup.includes("Halal")}/>
                             <ListItemText primary={"Halal"}/>
                           </MenuItem>
                           <MenuItem value="Gluten Free">
-                            <Checkbox checked={dietGroup.includes("Gluten Free")} onChange={() => setIsGlutenfree(!isGlutenfree)}/>
+                            <Checkbox checked={dietGroup.includes("Gluten Free")}/>
                             <ListItemText primary={"Gluten Free"}/>
                           </MenuItem>
                         </Select>
@@ -288,39 +308,39 @@ const Food = () => {
                         <InputLabel>Select allergies...</InputLabel>
                         <Select multiple value={allergyGroup} onChange={handleAllergyChange} input={<OutlinedInput label="Allergy" />} renderValue = {(selected) => selected.join(", ")} MenuProps={MenuProps}>
                           <MenuItem value="Egg">
-                            <Checkbox checked={allergyGroup.includes("Egg")} onChange={() => setHasEgg(!hasEgg)}/>
+                            <Checkbox checked={allergyGroup.includes("Egg")}/>
                             <ListItemText primary={"Egg"}/>
                           </MenuItem>
                           <MenuItem value="Fish">
-                            <Checkbox checked={allergyGroup.includes("Fish")} onChange={() => setHasFish(!hasFish)}/>
+                            <Checkbox checked={allergyGroup.includes("Fish")}/>
                             <ListItemText primary={"Fish"}/>
                           </MenuItem>
                           <MenuItem value="Milk">
-                            <Checkbox checked={allergyGroup.includes("Milk")} onChange={() => setHasMilk(!hasMilk)}/>
+                            <Checkbox checked={allergyGroup.includes("Milk")}/>
                             <ListItemText primary={"Milk"}/>
                           </MenuItem>
                           <MenuItem value="Peanuts">
-                            <Checkbox checked={allergyGroup.includes("Peanuts")} onChange={() => setHasPeanuts(!hasPeanuts)}/>
+                            <Checkbox checked={allergyGroup.includes("Peanuts")}/>
                             <ListItemText primary={"Peanuts"}/>
                           </MenuItem>
                           <MenuItem value="Sesame">
-                            <Checkbox checked={allergyGroup.includes("Sesame")} onChange={() => setHasSesame(!hasSesame)}/>
+                            <Checkbox checked={allergyGroup.includes("Sesame")}/>
                             <ListItemText primary={"Sesame"}/>
                           </MenuItem>
                           <MenuItem value="Shellfish">
-                            <Checkbox checked={allergyGroup.includes("Shellfish")} onChange={() => setHasShellfish(!hasShellfish)}/>
+                            <Checkbox checked={allergyGroup.includes("Shellfish")}/>
                             <ListItemText primary={"Shellfish"}/>
                           </MenuItem>
                           <MenuItem value="Soy">
-                            <Checkbox checked={allergyGroup.includes("Soy")} onChange={() => setHasSoy(!hasSoy)}/>
+                            <Checkbox checked={allergyGroup.includes("Soy")}/>
                             <ListItemText primary={"Soy"}/>
                           </MenuItem>
                           <MenuItem value="Tree Nuts">
-                            <Checkbox checked={allergyGroup.includes("Tree Nuts")} onChange={() => setHasTreenuts(!hasTreenuts)}/>
+                            <Checkbox checked={allergyGroup.includes("Tree Nuts")}/>
                             <ListItemText primary={"Tree Nuts"}/>
                           </MenuItem>
                           <MenuItem value="Wheat">
-                            <Checkbox checked={allergyGroup.includes("Wheat")} onChange={() => setHasWheat(!hasWheat)}/>
+                            <Checkbox checked={allergyGroup.includes("Wheat")}/>
                             <ListItemText primary={"Wheat"}/>
                           </MenuItem>
                         </Select>

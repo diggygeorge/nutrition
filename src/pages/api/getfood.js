@@ -30,7 +30,6 @@ export default async function handler(req, res) {
         let data = []
         var query = []
         console.log(isVegetarian)
-        console.log(typeof isVegetarian)
         if (isVegetarian === "true") {
             query.push({'vegetarian': true})
         }
