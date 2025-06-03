@@ -175,8 +175,8 @@ const Food = () => {
       protein: 0,
     })
 
-    const sortOptions = [0, -1, 1]
-    const [sortOptionIndex, setIndex] = useState(sortOptions[0])
+    const sortOptions = [-1, 1, 0]
+    const [sortOptionIndex, setIndex] = useState(0)
     const [sort, setSorted] = useState({
       value: sortOptionIndex,
       nutrient: ''
@@ -284,22 +284,12 @@ const Food = () => {
                       <FormControl sx={{width: 1}}>
                         <InputLabel>Select dietary restrictions...</InputLabel>
                         <Select multiple value={dietGroup} onChange={handleDietChange} input={<OutlinedInput label="Diet" />} renderValue = {(selected) => selected.join(", ")} MenuProps={MenuProps}>
-                          <MenuItem value="Vegetarian">
-                            <Checkbox checked={dietGroup.includes("Vegetarian")}/>
-                            <ListItemText primary={"Vegetarian"}/>
-                          </MenuItem>
-                          <MenuItem value="Vegan">
-                            <Checkbox checked={dietGroup.includes("Vegan")}/>
-                            <ListItemText primary={"Vegan"}/>
-                          </MenuItem>
-                          <MenuItem value="Halal">
-                            <Checkbox checked={dietGroup.includes("Halal")}/>
-                            <ListItemText primary={"Halal"}/>
-                          </MenuItem>
-                          <MenuItem value="Gluten Free">
-                            <Checkbox checked={dietGroup.includes("Gluten Free")}/>
-                            <ListItemText primary={"Gluten Free"}/>
-                          </MenuItem>
+                          {["Vegetarian", "Vegan", "Halal", "Gluten Free"].map((item) => (
+                            <MenuItem key={item} value={item}>
+                              <Checkbox checked={dietGroup.includes(item)}/>
+                              <ListItemText primary={item}/>
+                            </MenuItem>
+                          ))}
                         </Select>
                       </FormControl>
                     </Box>
@@ -307,42 +297,12 @@ const Food = () => {
                       <FormControl sx={{width: 1}}>
                         <InputLabel>Select allergies...</InputLabel>
                         <Select multiple value={allergyGroup} onChange={handleAllergyChange} input={<OutlinedInput label="Allergy" />} renderValue = {(selected) => selected.join(", ")} MenuProps={MenuProps}>
-                          <MenuItem value="Egg">
-                            <Checkbox checked={allergyGroup.includes("Egg")}/>
-                            <ListItemText primary={"Egg"}/>
-                          </MenuItem>
-                          <MenuItem value="Fish">
-                            <Checkbox checked={allergyGroup.includes("Fish")}/>
-                            <ListItemText primary={"Fish"}/>
-                          </MenuItem>
-                          <MenuItem value="Milk">
-                            <Checkbox checked={allergyGroup.includes("Milk")}/>
-                            <ListItemText primary={"Milk"}/>
-                          </MenuItem>
-                          <MenuItem value="Peanuts">
-                            <Checkbox checked={allergyGroup.includes("Peanuts")}/>
-                            <ListItemText primary={"Peanuts"}/>
-                          </MenuItem>
-                          <MenuItem value="Sesame">
-                            <Checkbox checked={allergyGroup.includes("Sesame")}/>
-                            <ListItemText primary={"Sesame"}/>
-                          </MenuItem>
-                          <MenuItem value="Shellfish">
-                            <Checkbox checked={allergyGroup.includes("Shellfish")}/>
-                            <ListItemText primary={"Shellfish"}/>
-                          </MenuItem>
-                          <MenuItem value="Soy">
-                            <Checkbox checked={allergyGroup.includes("Soy")}/>
-                            <ListItemText primary={"Soy"}/>
-                          </MenuItem>
-                          <MenuItem value="Tree Nuts">
-                            <Checkbox checked={allergyGroup.includes("Tree Nuts")}/>
-                            <ListItemText primary={"Tree Nuts"}/>
-                          </MenuItem>
-                          <MenuItem value="Wheat">
-                            <Checkbox checked={allergyGroup.includes("Wheat")}/>
-                            <ListItemText primary={"Wheat"}/>
-                          </MenuItem>
+                          {["Egg", "Fish", "Milk", "Peanuts", "Sesame", "Shellfish", "Soy", "Tree Nuts", "Wheat"].map((item) => (
+                            <MenuItem key={item} value={item}>
+                              <Checkbox checked={allergyGroup.includes(item)}/>
+                              <ListItemText primary={item}/>
+                            </MenuItem>
+                          ))}
                         </Select>
                       </FormControl>
                     </Box>
@@ -362,7 +322,7 @@ const Food = () => {
                     </ToggleButtonGroup>
                     <Box className="pt-2 border-black border-3">
                       <Button variant="outlined" color="error" className="w-full text-red-100" onClick={() => {
-                                              setIndex((sortOptionIndex + 1) % 3)
+                                              setIndex((sortOptionIndex) => ((sortOptionIndex + 1) % 3))
                                               console.log(sortOptionIndex)
                                               setSorted({value: sortOptions[sortOptionIndex], nutrient: sort.nutrient})
                                             }
