@@ -4,7 +4,6 @@ import json
 import re
 from datetime import datetime
 import pymongo
-
 from dotenv import load_dotenv
 import os
 
@@ -55,6 +54,14 @@ for location in locations:
                         allergies = allergygroup.find_all("li")
                         for allergy in allergies:
                             item_dict[allergy['class'][0]] = True
+
+                    ingredient_section = meal.find("aside", class_="nutrition-facts-ingredients")
+                    ingredient_string = ingredient_section.get_text().replace("\n", "").replace("\t", "")
+                    item_dict["ingredients"] = ingredient_string
+
+                    station_section = meal.find("strong", class_="js-sortby-station")
+                    station_string = station_section.get_text()
+                    item_dict["station"] = station_string
 
                     sections = table.find_all("tr", class_=["nutrition-label-section", "nutrition-label-subsection"])
                     for section in sections:

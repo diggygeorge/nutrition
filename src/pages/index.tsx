@@ -41,6 +41,8 @@ interface FoodItem {
     dietaryfiber: number;
     sugars: number;
     protein: number;
+    ingredients: string;
+    station: string;
 }
 
 const cart = new Map()
@@ -83,43 +85,54 @@ const Food = () => {
             <h1 className="font-body">{item.name}</h1>
           </AccordionSummary>
           <AccordionDetails>
-            <Box className="grid grid-cols-2 pb-2">
-              <Typography>Calories: {item.calories}</Typography>
-              <Typography>Total Fat: {item.totalfat}g</Typography>
-              <Typography>Saturated Fat: {item.saturatedfat}g</Typography>
-              <Typography>Trans Fat: {item.transfat}g</Typography>
-              <Typography>Cholesterol: {item.cholesterol}mg</Typography>
-              <Typography>Sodium: {item.sodium}mg</Typography>
-              <Typography>Total Carbohydrate: {item.totalcarbohydrate}g</Typography>
-              <Typography>Dietary Fiber: {item.dietaryfiber}g</Typography>
-              <Typography>Sugars: {item.sugars}g</Typography>
-              <Typography>Protein: {item.protein}g</Typography>
+            <Box className="flex justify-between pb-2">
+              <Box>
+                <h1 className="font-bold">Nutrition:</h1>
+                <Typography>Calories: {item.calories}</Typography>
+                <Typography>Total Fat: {item.totalfat}g</Typography>
+                <Typography>Saturated Fat: {item.saturatedfat}g</Typography>
+                <Typography>Trans Fat: {item.transfat}g</Typography>
+                <Typography>Cholesterol: {item.cholesterol}mg</Typography>
+                <Typography>Sodium: {item.sodium}mg</Typography>
+                <Typography>Total Carbohydrate: {item.totalcarbohydrate}g</Typography>
+                <Typography>Dietary Fiber: {item.dietaryfiber}g</Typography>
+                <Typography>Sugars: {item.sugars}g</Typography>
+                <Typography>Protein: {item.protein}g</Typography>
+              </Box>
+              <Box className="w-[60%] relative">
+                <Typography className="pb-2 flex">Station: {item.station}</Typography>
+                <Typography className="pb-12">{item.ingredients}</Typography>
+                <Box className="absolute bottom-0 right-0">
+                  <CartButton onClick={() => {
+                      enqueueSnackbar(`${item.name} added!`, {variant: "success"});
+                      if (cart.get(item._id) === undefined) {
+                        cart.set(item._id, 1)
+                      }
+                      else {
+                        cart.set(item._id, cart.get(item._id) + 1)
+                      }
+                      setTotal(
+                        {
+                          calories: total.calories += item.calories,
+                          totalfat: total.totalfat += item.totalfat,
+                          saturatedfat: total.saturatedfat += item.saturatedfat,
+                          transfat: total.transfat += item.transfat,
+                          cholesterol: total.cholesterol += item.cholesterol,
+                          sodium: total.sodium += item.sodium,
+                          totalcarbohydrate: total.totalcarbohydrate += item.totalcarbohydrate,
+                          dietaryfiber: total.dietaryfiber += item.dietaryfiber,
+                          sugars: total.sugars += item.sugars,
+                          protein: total.protein += item.protein
+                        }
+                      )
+                      {if (cartInfo.indexOf(item) === -1) {cartInfo.push(item)
+                  }}
+                      console.log(cartInfo)}}>Add</CartButton>
+                </Box>
+                
+              </Box>
             </Box>
-            <CartButton onClick={() => {
-                enqueueSnackbar(`${item.name} added!`, {variant: "success"});
-                if (cart.get(item._id) === undefined) {
-                  cart.set(item._id, 1)
-                }
-                else {
-                  cart.set(item._id, cart.get(item._id) + 1)
-                }
-                setTotal(
-                  {
-                    calories: total.calories += item.calories,
-                    totalfat: total.totalfat += item.totalfat,
-                    saturatedfat: total.saturatedfat += item.saturatedfat,
-                    transfat: total.transfat += item.transfat,
-                    cholesterol: total.cholesterol += item.cholesterol,
-                    sodium: total.sodium += item.sodium,
-                    totalcarbohydrate: total.totalcarbohydrate += item.totalcarbohydrate,
-                    dietaryfiber: total.dietaryfiber += item.dietaryfiber,
-                    sugars: total.sugars += item.sugars,
-                    protein: total.protein += item.protein
-                  }
-                )
-                {if (cartInfo.indexOf(item) === -1) {cartInfo.push(item)
-            }}
-                console.log(cartInfo)}}>Add</CartButton>
+          
           </AccordionDetails>
         </Accordion>
       </> )
@@ -269,7 +282,7 @@ const Food = () => {
                       ))}
                     </TextField>
                   </Box>
-                  <Box className="pl-2 pr-2 pt-2">
+                  <Box className="pl-2 pr-2">
                     <TextField className="w-full" select label="Mealtime" onChange={(e) => {setTime(e.target.value.toLowerCase())}} defaultValue="Breakfast">
                       {['Breakfast', 'Lunch', 'Brunch', 'Dinner'].map((option) => (
                         <MenuItem key={option} value={option}>
@@ -306,7 +319,6 @@ const Food = () => {
                         </Select>
                       </FormControl>
                     </Box>
-                    <Divider/>
                     <h1 className="font-body text-center text-gray-500 pb-1">Sort by Nutrient</h1>
                       <ToggleButtonGroup size="small" orientation="vertical" value={sort.nutrient} exclusive onChange={(event: React.MouseEvent<HTMLElement>, next: string) => {setSorted({value: sort.value, nutrient: next.toLowerCase().replace(" ", "")})}}>
                         <Box className="grid grid-cols-2 gap-2">
