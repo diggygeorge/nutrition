@@ -14,11 +14,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
-import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import Image from 'next/image';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
@@ -43,6 +40,7 @@ interface FoodItem {
     protein: number;
     ingredients: string;
     station: string;
+    serving_size: string;
 }
 
 const cart = new Map()
@@ -87,21 +85,21 @@ const Food = () => {
           <AccordionDetails>
             <Box className="flex justify-between pb-2">
               <Box>
-                <h1 className="font-bold">Nutrition:</h1>
-                <Typography>Calories: {item.calories}</Typography>
-                <Typography>Total Fat: {item.totalfat}g</Typography>
-                <Typography>Saturated Fat: {item.saturatedfat}g</Typography>
-                <Typography>Trans Fat: {item.transfat}g</Typography>
-                <Typography>Cholesterol: {item.cholesterol}mg</Typography>
-                <Typography>Sodium: {item.sodium}mg</Typography>
-                <Typography>Total Carbohydrate: {item.totalcarbohydrate}g</Typography>
-                <Typography>Dietary Fiber: {item.dietaryfiber}g</Typography>
-                <Typography>Sugars: {item.sugars}g</Typography>
-                <Typography>Protein: {item.protein}g</Typography>
+                <h1 className="pb-2"><strong>Serving Size: </strong>{item.serving_size}</h1>
+                <h1>Calories: {item.calories}</h1>
+                <h1>Total Fat: {item.totalfat}g</h1>
+                <h1>Saturated Fat: {item.saturatedfat}g</h1>
+                <h1>Trans Fat: {item.transfat}g</h1>
+                <h1>Cholesterol: {item.cholesterol}mg</h1>
+                <h1>Sodium: {item.sodium}mg</h1>
+                <h1>Total Carbohydrate: {item.totalcarbohydrate}g</h1>
+                <h1>Dietary Fiber: {item.dietaryfiber}g</h1>
+                <h1>Sugars: {item.sugars}g</h1>
+                <h1>Protein: {item.protein}g</h1>
               </Box>
               <Box className="w-[60%] relative">
-                <Typography className="pb-2 flex">Station: {item.station}</Typography>
-                <Typography className="pb-12">{item.ingredients}</Typography>
+                <h1 className="pb-2 flex"><h1 className="font-bold pr-1">Station:</h1> {item.station}</h1>
+                <h1 className="pb-12">{item.ingredients}</h1>
                 <Box className="absolute bottom-0 right-0">
                   <CartButton onClick={() => {
                       enqueueSnackbar(`${item.name} added!`, {variant: "success"});

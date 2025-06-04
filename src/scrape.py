@@ -54,7 +54,11 @@ for location in locations:
                         allergies = allergygroup.find_all("li")
                         for allergy in allergies:
                             item_dict[allergy['class'][0]] = True
-
+                    
+                    servingsize_section = meal.find("h4", class_="nutrition-serving-size")
+                    servingsize_string = servingsize_section.get_text().replace("Serving size ", "")
+                    item_dict["serving_size"] = servingsize_string
+                    
                     ingredient_section = meal.find("aside", class_="nutrition-facts-ingredients")
                     ingredient_string = ingredient_section.get_text().replace("\n", "").replace("\t", "")
                     item_dict["ingredients"] = ingredient_string
