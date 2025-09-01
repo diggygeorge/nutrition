@@ -16,7 +16,6 @@ mycollection = mydb["food"]
 date = datetime.today().strftime('%Y-%m-%d')
 
 food_list = []
-
 # Finds foods and their nutrition values for warren, west, marciano, and granby.
 locations = ['warren', 'west', 'marciano', 'granby']
 dietary_restrictions = ['vegetarian', 'vegan', 'halal', 'gluten-free', 'egg', 'fish', 'milk', 'peanuts', 'sesame', 'shellfish', 'soy', 'tree-nuts', 'wheat']
@@ -101,7 +100,7 @@ if match:
     for section in sections:
         for group in section['groups']:
             for item in group['items']:
-                food_list.extend([{
+                description_dict = {
                     'name': item['formalName'].replace("\'", ""),
                     'location': 'fenway',
                     'mealtime': section['name'].lower(),
@@ -114,8 +113,51 @@ if match:
                     'totalcarbohydrate': float(item['carbohydrates'].replace("g", "")) if item['carbohydrates'] != "" else 0.0,
                     'dietaryfiber': float(item['dietaryFiber'].replace("g", "")) if item['dietaryFiber'] != "" else 0.0,
                     'sugars': float(item['sugar'].replace("g", "")) if item['sugar'] != "" else 0.0,
-                    'protein': float(item['protein'].replace("g", "")) if item['protein'] != "" else 0.0
-                }])
+                    'protein': float(item['protein'].replace("g", "")) if item['protein'] != "" else 0.0,
+                    'ingredients': item['description'],
+                    'station': item['course'].title(),
+                    'serving_size': item['portion'],
+                    'vegetarian': item['isVegetarian'],
+                    'vegan': item['isVegan'],
+                    'halal': False,
+                    'gluten-free': False,
+                    'egg': False,
+                    'fish': False,
+                    'milk': False,
+                    'peanuts': False,
+                    'sesame': False,
+                    'shellfish': False,
+                    'soy': False,
+                    'tree-nuts': False,
+                    'wheat': False
+                }
+                for allergen in item['allergens']:
+                    match allergen['name']:
+                        case "Egg":
+                            description_dict['egg'] = True
+                        case "Fish":
+                            description_dict['fish'] = True
+                        case "Milk":
+                            description_dict['milk'] = True
+                        case "Peanut":
+                            description_dict['peanuts'] = True
+                        case "Sesame":
+                            description_dict['sesame'] = True
+                        case "Shellfish":
+                            description_dict['shellfish'] = True
+                        case "Soy":
+                            description_dict['soy'] = True
+                        case "Treenuts":
+                            description_dict['tree-nuts'] = True
+                        case "Wheat":
+                            description_dict['wheat'] = True
+                        case "Gluten":
+                            description_dict['gluten-free'] = True
+                        
+                        
+                        
+                food_list.extend([description_dict])
+
         fenway_time_index += 1
 else:
     print("__PRELOADED_STATE__ not found.")

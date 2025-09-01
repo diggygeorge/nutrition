@@ -294,7 +294,7 @@ const Food = () => {
                     <Box className="pt-2">
                       <FormControl sx={{width: 1}}>
                         <InputLabel>Select dietary restrictions...</InputLabel>
-                        <Select label="Select dietary restrictions..." multiple value={dietGroup} onChange={handleDietChange} input={<OutlinedInput label="Diet" />} renderValue = {(selected) => selected.join(", ")} MenuProps={MenuProps}>
+                        <Select multiple value={dietGroup} onChange={handleDietChange} input={<OutlinedInput label="Diet" />} renderValue = {(selected) => selected.join(", ")} MenuProps={MenuProps}>
                           {["Vegetarian", "Vegan", "Halal", "Gluten Free"].map((item) => (
                             <MenuItem key={item} value={item}>
                               <Checkbox checked={dietGroup.includes(item)}/>
