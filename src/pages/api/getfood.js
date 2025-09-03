@@ -143,6 +143,7 @@ export default async function handler(req, res) {
             data = await collection.find({$and: query}).sort({[sort_nutrient]: sort}).toArray();
         }
         console.log(query)
+        console.log(data)
         res.status(200).json(data);
     } 
     catch (error) {
