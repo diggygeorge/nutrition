@@ -100,7 +100,7 @@ const Food = () => {
               </Box>
               <Box className="w-[60%] relative">
                 <h1 className="pb-2 flex"><h1 className="font-bold pr-1">Station:</h1> {item.station}</h1>
-                {item.description !== "" ? <h1 className="pb-12">Description: {item.description}</h1> : <></>}
+                {item.description !== "" ? <h1 className="pb-2">Description: {item.description}</h1> : <></>}
                 {item.ingredients !== "" ? <h1 className="pb-12">Ingredients: {item.ingredients}</h1> : <></>}
                 <Box className="absolute bottom-0 right-0">
                   <CartButton onClick={() => {
