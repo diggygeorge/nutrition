@@ -4,11 +4,11 @@ import json
 import re
 from datetime import datetime
 import pymongo
-# from dotenv import load_dotenv
+from dotenv import load_dotenv
 import os
 
-# load_dotenv(dotenv_path=".env.local")
-database_url = "mongodb+srv://diggygeorge:FalzarGaming@cluster0.dnnyvow.mongodb.net/dininghalls?retryWrites=true&w=majority&appName=Cluster0&authSource=admin"
+load_dotenv(dotenv_path=".env.local")
+database_url = os.getenv("MONGODB_URI")
 myclient = pymongo.MongoClient(database_url)
 mydb = myclient["dininghall"]
 mycollection = mydb["food"]
