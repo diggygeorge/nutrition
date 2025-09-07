@@ -1,5 +1,9 @@
-<img width="400" height="" alt="image" src="./src/public/myfitnessterrierlogo.png" />
-<h1>MyFitnessTerrier</h1>
+<div>
+  <h1>MyFitnessTerrier</h1>
+  <img width="100" height="" alt="image" src="./src/public/myfitnessterrierlogo.png" />
+</div>
+
+
 <strong>A Revamped Boston University Dining Hall Website</strong>
 
 ---
