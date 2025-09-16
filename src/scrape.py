@@ -1,15 +1,12 @@
 import requests
-from bs4 import BeautifulSoup
-import json
-import re
 from datetime import datetime
 import pymongo
 from dotenv import load_dotenv
 import os
 
 load_dotenv(dotenv_path=".env.local")
-database_url = os.getenv("MONGODB_URI")
-myclient = pymongo.MongoClient(database_url)
+MONGODB_URI = os.getenv("MONGODB_URI")
+myclient = pymongo.MongoClient(MONGODB_URI)
 mydb = myclient["dininghall"]
 mycollection = mydb["food"]
 
@@ -62,42 +59,50 @@ for location in meals:
                 food_list.extend([description_dict])
 
 # Finds foods and their nutritional values for fenway.  Fenway's website is different than the others.
-url = 'https://bufenway.sodexomyway.com/en-us/locations/the-fenway-dining-hall'
-page = requests.get(url)
-soup = BeautifulSoup(page.content, 'html.parser')
 
-# content script
-content = soup.find("script", string=re.compile(r"window.__PRELOADED_STATE__"))
+date = datetime.today().strftime('%Y/%m/%d')
 
-script_content = content.string
+url = "https://api-prd.sodexomyway.net/v0.2/data/menu/31992001/152621"
+params = {"date": date}
 
-match = re.search(r"window.__PRELOADED_STATE__\s*=\s*(\{.*\})", script_content)
+headers = {
+    "Accept": "application/json",
+    "api-key": os.getenv("FENWAY_KEY"),
+    "Origin": "https://bufenway.sodexomyway.com", 
+    "Referer": "https://bufenway.sodexomyway.com/"
+}
 
-if match:
-    fenway_time_index = 0
-    js_object_str = match.group(1)
-    preloaded_state = json.loads(js_object_str)
-    sections = preloaded_state['composition']['subject']['regions'][1]['fragments'][0]['content']['main']['sections']
-    for section in sections:
+def is_float(s):
+    try:
+        float(s)
+        return True
+    except ValueError:
+        return False
+
+resp = requests.get(url, headers=headers, params=params)
+fenway_data = resp.json()
+
+for section in fenway_data:
         for group in section['groups']:
+            station = group['name']
             for item in group['items']:
                 description_dict = {
                     'name': item['formalName'].replace("\'", ""),
                     'location': 'fenway',
                     'mealtime': section['name'].lower(),
-                    "calories": float(item['calories']) if item['calories'] != "" else 0.0,
-                    'totalfat': float(item['fat'].replace("g", "")) if item['fat'] != "" else 0.0,
-                    'saturatedfat': float(item['saturatedFat'].replace("g", "")) if item['saturatedFat'] != "" else 0.0,
-                    'transfat': float(item['transFat'].replace("g", "")) if item['transFat'] != "" else 0.0,
-                    'cholesterol': float(item['cholesterol'].replace("mg", "")) if item['cholesterol'] != "" else 0.0,
-                    'sodium': float(item['sodium'].replace("mg", "")) if item['sodium'] != "" else 0.0,
-                    'totalcarbohydrate': float(item['carbohydrates'].replace("g", "")) if item['carbohydrates'] != "" else 0.0,
-                    'dietaryfiber': float(item['dietaryFiber'].replace("g", "")) if item['dietaryFiber'] != "" else 0.0,
-                    'sugars': float(item['sugar'].replace("g", "")) if item['sugar'] != "" else 0.0,
-                    'protein': float(item['protein'].replace("g", "")) if item['protein'] != "" else 0.0,
+                    "calories": float(item['calories']) if is_float(item['calories']) else 0.0,
+                    'totalfat': float(item['fat'].replace("g", "")) if is_float(item['fat']) else 0.0,
+                    'saturatedfat': float(item['saturatedFat'].replace("g", "")) if is_float(item['saturatedFat']) else 0.0,
+                    'transfat': float(item['transFat'].replace("g", "")) if is_float(item['transFat']) else 0.0,
+                    'cholesterol': float(item['cholesterol'].replace("mg", "")) if is_float(item['cholesterol']) else 0.0,
+                    'sodium': float(item['sodium'].replace("mg", "")) if is_float(item['sodium']) else 0.0,
+                    'totalcarbohydrate': float(item['carbohydrates'].replace("g", "")) if is_float(item['carbohydrates']) else 0.0,
+                    'dietaryfiber': float(item['dietaryFiber'].replace("g", "")) if is_float(item['dietaryFiber']) else 0.0,
+                    'sugars': float(item['sugar'].replace("g", "")) if is_float(item['sugar']) else 0.0,
+                    'protein': float(item['protein'].replace("g", "")) if is_float(item['protein']) else 0.0,
                     'description': item['description'],
                     'ingredients': "",
-                    'station': item['course'].title(),
+                    'station': station.strip(),
                     'serving_size': item['portion'],
                     'vegetarian': item['isVegetarian'],
                     'vegan': item['isVegan'],
@@ -137,12 +142,8 @@ if match:
                             description_dict['gluten-free'] = True
                         
                         
-                        
-                food_list.extend([description_dict])
-
-        fenway_time_index += 1
-else:
-    print("__PRELOADED_STATE__ not found.")
+                if description_dict['mealtime'] != 'snack' and description_dict['mealtime'] != 'late night':
+                    food_list.extend([description_dict])
 
 print(food_list)
 
