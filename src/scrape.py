@@ -80,6 +80,7 @@ def is_float(s):
         return False
 
 resp = requests.get(url, headers=headers, params=params)
+print(resp.status.code)
 fenway_data = resp.json()
 
 for section in fenway_data:
