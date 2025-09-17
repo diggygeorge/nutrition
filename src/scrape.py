@@ -63,7 +63,7 @@ for location in meals:
 
 date = datetime.today().strftime('%Y/%m/%d')
 print(date)
-url = "https://api-prd.sodexomyway.net/v0.2/data/menu/31992001/152621"
+url = "https://api-prd.sodexomyway.net/v0.2/data/menu/31992001/%20152621"
 params = {"date": date}
 
 headers = {
@@ -73,7 +73,7 @@ headers = {
     "Referer": "https://bufenway.sodexomyway.com/"
 }
 
-print(os.getenv("FENWAY_KEY"))
+print(repr(os.getenv("FENWAY_KEY")))
 
 def is_float(s):
     try:
