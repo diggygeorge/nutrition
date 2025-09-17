@@ -81,6 +81,8 @@ def is_float(s):
         return False
 print("Requesting from Fenway API...")
 resp = requests.get(url, headers=headers, params=params)
+print(resp)
+print(resp.status_code)
 fenway_data = resp.json()
 
 for section in fenway_data:
