@@ -73,7 +73,8 @@ headers = {
     "Referer": "https://bufenway.sodexomyway.com/"
 }
 
-print(repr(os.getenv("FENWAY_KEY")))
+key = os.getenv("FENWAY_KEY")
+print("FENWAY_KEY loaded?", key is not None, "length:", len(key) if key else None)
 
 def is_float(s):
     try:
