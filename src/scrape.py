@@ -73,6 +73,8 @@ headers = {
     "Referer": "https://bufenway.sodexomyway.com/",
 }
 
+print(headers)
+
 def is_float(s):
     try:
         float(s)
