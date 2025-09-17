@@ -26,3 +26,4 @@ jobs:
       # Connection string
       env:
         MONGODB_URI: ${{ secrets.MONGODB_URI }}
+        FENWAY_KEY: ${{ secrets.FENWAY_KEY }}
