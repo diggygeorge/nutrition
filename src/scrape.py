@@ -61,7 +61,7 @@ for location in meals:
 # Finds foods and their nutritional values for fenway.  Fenway's website is different than the others.
 
 date = datetime.today().strftime('%Y/%m/%d')
-
+print(date)
 url = "https://api-prd.sodexomyway.net/v0.2/data/menu/31992001/152621"
 params = {"date": date}
 
@@ -78,7 +78,7 @@ def is_float(s):
         return True
     except ValueError:
         return False
-
+print("Requesting from Fenway API...")
 resp = requests.get(url, headers=headers, params=params)
 print(resp.status.code)
 fenway_data = resp.json()
