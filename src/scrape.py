@@ -14,7 +14,7 @@ date = datetime.today().strftime('%m/%d/%Y')
 print(date)
 
 food_list = []
-
+print("Connecting to BU dining API..")
 r = requests.get("https://www.bu.edu/phpbin/dining/api/full/")
 data = r.json()
 print("Connected to BU Dining API...")
