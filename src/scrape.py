@@ -73,9 +73,6 @@ headers = {
     "Referer": "https://bufenway.sodexomyway.com/"
 }
 
-key = os.getenv("FENWAY_KEY")
-print("FENWAY_KEY loaded?", key is not None, "length:", len(key) if key else None)
-
 def is_float(s):
     try:
         float(s)
@@ -84,7 +81,7 @@ def is_float(s):
         return False
 print("Requesting from Fenway API...")
 resp = requests.get(url, headers=headers, params=params)
-print(resp)
+print("Response Text:", resp.text)
 print(resp.status_code)
 fenway_data = resp.json()
 
