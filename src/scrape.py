@@ -68,9 +68,9 @@ params = {"date": date}
 
 headers = {
     "Accept": "application/json",
-    "api-key": os.getenv("FENWAY_KEY"),
+    "API-key": os.getenv("FENWAY_KEY"),
     "Origin": "https://bufenway.sodexomyway.com", 
-    "Referer": "https://bufenway.sodexomyway.com/"
+    "Referer": "https://bufenway.sodexomyway.com/",
 }
 
 def is_float(s):
