@@ -17,6 +17,7 @@ food_list = []
 
 r = requests.get("https://www.bu.edu/phpbin/dining/api/full/")
 data = r.json()
+print("Connected to BU Dining API...")
 menu = data['menu']
 recipes = data['recipes']
 meals = menu[date]
