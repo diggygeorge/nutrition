@@ -26,6 +26,7 @@ for location in meals:
         for station in meals[location][mealtime]:
             for item in meals[location][mealtime][station]:
                 description_dict = {
+                    'date': date,
                     'name': recipes[item]['name'] if 'name' in recipes[item] and recipes[item]['name'] is not None else "",
                     'location': location.lower(),
                     'mealtime': mealtime.lower(),
@@ -92,6 +93,7 @@ for section in fenway_data:
             station = group['name']
             for item in group['items']:
                 description_dict = {
+                    'date': date,
                     'name': item['formalName'].replace("\'", ""),
                     'location': 'fenway',
                     'mealtime': section['name'].lower(),

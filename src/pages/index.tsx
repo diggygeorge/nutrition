@@ -25,6 +25,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 interface FoodItem {
     _id: ObjectId;
+    date: string;
     name: string;
     location: string;
     mealtime: string;
@@ -172,6 +173,7 @@ const Food = () => {
     
 
     let emptyItem: FoodItem[] = []
+    const [date, setDate] = useState('');
     const [fooditems, setFoodItems] = useState<FoodItem[]>(emptyItem);
     const [location, setLocation] = useState('warren')
     const [time, setTime] = useState('breakfast')
@@ -259,7 +261,10 @@ const Food = () => {
     useEffect(() => {
         fetch(`/api/getfood?location=${location}&time=${time}&nutrient=${sort.nutrient}&sort=${sort.value}&isVegetarian=${isVegetarian}&isVegan=${isVegan}&isHalal=${isHalal}&isGlutenfree=${isGlutenfree}&noEgg=${hasEgg}&noFish=${hasFish}&noMilk=${hasMilk}&noPeanuts=${hasPeanuts}&noSesame=${hasSesame}&noShellfish=${hasShellfish}&noSoy=${hasSoy}&noTreenuts=${hasTreenuts}&noWheat=${hasWheat}`)
         .then((res) => (res.json()))
-        .then((data) => {setFoodItems(data)})
+        .then((data) => {
+          setFoodItems(data)
+          setDate(data[0].date)
+        })
     }, [location, time, sort, isVegetarian, isVegan, isHalal, isGlutenfree, hasEgg, hasFish, hasMilk, hasPeanuts, hasShellfish, hasSoy, hasTreenuts, hasWheat])
 
     return (
@@ -346,7 +351,7 @@ const Food = () => {
               </Box>
               <Box className="pt-5 w-[48.5%] bg-white flex flex-col">
                 <Box className="w-full">
-                  <h1 className="text-black text-xl pb-3 bg-white font-medium">Menu</h1>
+                  <h1 className="text-black text-xl pb-3 bg-white font-medium">Menu: {date}</h1>
                 </Box>
                 <Divider/>
                 <Box className="overflow-y-auto">
