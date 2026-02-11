@@ -27,13 +27,13 @@ Here are some of its features:
 ✅ **Food Cart System** — Compute total nutrition information for each mealtime through food cart system. 
 
 
-## 🔨 Tools
+## 🔨 Tools:
 
 Frontend: Made with **Next.js**, **Typescript**
 
 Backend: **Python**, **MongoDB** and **Next.js**
 
-## 🔥 Demonstration
+## 🔥 Demonstration:
 
 [![Watch the video](https://img.youtube.com/vi/E_UhFZvgSTU/maxresdefault.jpg)](https://www.youtube.com/watch?v=E_UhFZvgSTU)
 
