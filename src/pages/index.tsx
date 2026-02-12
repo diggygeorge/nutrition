@@ -275,10 +275,10 @@ const Food = () => {
               <h1 className="text-3xl text-white font-medium p-2">MyFitnessTerrier</h1>
               <Image src="/myfitnessterrierlogo.png" alt="logo" width={50} height={50}></Image>
             </Box>
-            <Box className="flex flex-grow overflow-auto">
-              <Box className="bg-white w-[18.5%] pt-4 h-full">
-                <Card className="m-2">
-                  <Box className="pl-2 pr-2 pt-2 pb-2">
+            <Box className="flex flex-grow overflow-auto snap-x snap-mandatory">
+              <Box className="snap-center bg-white min-w-full md:min-w-[18.5%] pt-4 h-full">
+                <Card className="m-2 min-w-screen md:h-screen">
+                  <Box className="p-2">
                     <TextField className="w-full" select label="Dining Hall" onChange={(e) => {setLocation(e.target.value.toLowerCase())}} defaultValue="Warren">
                       {['Warren', 'West', 'Marciano', 'Granby', 'Fenway'].map((option) => (
                         <MenuItem key={option} value={option}>
@@ -325,6 +325,7 @@ const Food = () => {
                       </FormControl>
                     </Box>
                     <h1 className="font-body text-center text-gray-500 pb-1">Sort by Nutrient</h1>
+                    <Box className="flex justify-center items-center">
                       <ToggleButtonGroup size="small" orientation="vertical" value={sort.nutrient} exclusive onChange={(event: React.MouseEvent<HTMLElement>, next: string) => {setSorted({value: sort.value, nutrient: next.toLowerCase().replace(" ", "")})}}>
                         <Box className="grid grid-cols-2 gap-2">
                           {['Calories', 'Total Fat', 'Saturated Fat', 'Trans Fat', 'Cholesterol', 'Sodium', 'Total Carbohydrate', 'Dietary Fiber', 'Sugars', 'Protein'].map((item) => (
@@ -337,9 +338,10 @@ const Food = () => {
                       ))}
                         </Box>
                       
-                    </ToggleButtonGroup>
-                    <Box className="pt-2 border-black border-3">
-                      <Button variant="outlined" color="error" className="w-full text-red-100" onClick={() => {
+                      </ToggleButtonGroup>
+                    </Box>
+                    <Box className="pt-4 md:w-full w-[50%] m-auto flex justify-center">
+                      <Button variant="outlined" color="error" className="text-red-100" onClick={() => {
                                               setIndex((sortOptionIndex) => ((sortOptionIndex + 1) % 3))
                                               console.log(sortOptionIndex)
                                               setSorted({value: sortOptions[sortOptionIndex], nutrient: sort.nutrient})
@@ -349,11 +351,10 @@ const Food = () => {
                   </Box>
                 </Card>
               </Box>
-              <Box className="pt-5 w-[48.5%] bg-white flex flex-col">
+              <Box className="snap-center pt-5 min-w-full md:min-w-[48.5%] bg-white flex flex-col">
                 <Box className="w-full">
-                  <h1 className="text-black text-xl pb-3 bg-white font-medium">Menu: {date}</h1>
+                  <h1 className="md:text-left text-center text-black text-xl pb-3 bg-white font-medium">Menu: {date}</h1>
                 </Box>
-                <Divider/>
                 <Box className="overflow-y-auto">
                   <Box>
                     <ul>
@@ -365,12 +366,11 @@ const Food = () => {
                   {fooditems.length === 0 ? (isVegetarian || isVegan || isHalal || isGlutenfree || hasEgg || hasFish || hasMilk || hasPeanuts || hasSesame || hasShellfish || hasSoy || hasTreenuts || hasWheat) ? <h1 className="font-body text-black pt-4">Sorry, no menu items meet these filters.  Please choose less or different restrictions.</h1> : <h1 className="font-body text-black pt-4">Sorry, there seems to be no menu items at the moment.  Please select a different dining hall or time.</h1> : <></>}
                 </Box>
               </Box>
-              <Box className="flex flex-col w-[33%]">
+              <Box className="snap-center flex flex-col min-w-full md:min-w-[33%]">
                 <Box className="flex flex-col pt-5 text-black h-[59%]">
                   <Box>
                     <h1 className="text-center text-xl pb-3 font-medium">Items</h1>
                   </Box>
-                  <Divider/>
                   <Box className="overflow-auto pl-2 pr-2">
                   {cartInfo.map((item) => (
                     <h1 key = {item._id.toString()}>
