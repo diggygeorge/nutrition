@@ -289,6 +289,9 @@ const Food = () => {
               <Box className="snap-center bg-white min-w-full md:min-w-[18.5%] pt-4 h-full">
                 <Card className="m-2 min-w-screen md:h-screen">
                   <Box className="p-2">
+                      <Box className="mb-2 border-b-2 pl-2 border-gray-300">
+                        <h2 className="font-weight-500 font-medium text-gray-800">Filter:</h2>
+                      </Box>
                     <TextField className="w-full" select label="Dining Hall" onChange={(e) => {setLocation(e.target.value.toLowerCase())}} defaultValue="Warren">
                       {['Warren', 'West', 'Marciano', 'Granby', 'Fenway'].map((option) => (
                         <MenuItem key={option} value={option}>
@@ -363,15 +366,16 @@ const Food = () => {
               </Box>
               <Box className="snap-center pt-5 min-w-full md:min-w-[48.5%] bg-white flex flex-col">
                 <Box className="w-full">
-                  <h1 className="md:text-left text-center text-black text-xl pb-3 bg-white font-medium">Menu: {date}</h1>
+                  <h1 className="md:text-left text-center text-black text-xl pl-2 pb-3 bg-white font-medium">Menu: {date}</h1>
                 </Box>
+                <Divider/>
                 <Box className="overflow-y-auto">
                   <Box>
                     {Object.entries(groupedItems)?.map(([station, stationitems]) => (
                       <Box key={station} className="flex flex-col mb-4">
                         
-                        <Box className="mb-4 border-b-2 border-gray-300">
-                          <h2 className="text-md font-medium text-gray-800">{station}</h2>
+                        <Box className="mb-2 border-b-2 pl-2 border-gray-300">
+                          <h2 className="font-weight-500 font-medium text-gray-800">{station}:</h2>
                         </Box>
 
                         <Box className="flex flex-col">
