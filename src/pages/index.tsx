@@ -281,17 +281,17 @@ const Food = () => {
       <SnackbarProvider maxSnack={3}>
       <title>MyFitnessTerrier</title>
         <Box className="flex flex-col h-screen bg-white overflow-hidden">
-            <Box className="flex bg-[#be030f]">
+            <Box className="md:justify-start justify-center flex bg-[#be030f]">
               <h1 className="text-3xl text-white font-medium p-2">MyFitnessTerrier</h1>
               <Image src="/myfitnessterrierlogo.png" alt="logo" width={50} height={50}></Image>
             </Box>
             <Box className="flex flex-grow overflow-auto snap-x snap-mandatory">
               <Box className="snap-center bg-white min-w-full md:min-w-[18.5%] pt-4 h-full">
-                <Card className="m-2 min-w-screen md:h-screen">
+                <Box className="w-full">
+                  <h1 className="md:text-left text-center text-black text-xl pt-1 pl-2 pb-3 bg-white font-medium">Filter:</h1>
+                </Box>
+                <Card className="mx-2 min-w-screen pb-14 mb-1">
                   <Box className="p-2">
-                      <Box className="mb-2 border-b-2 pl-2 border-gray-300">
-                        <h2 className="font-weight-500 font-medium text-gray-800">Filter:</h2>
-                      </Box>
                     <TextField className="w-full" select label="Dining Hall" onChange={(e) => {setLocation(e.target.value.toLowerCase())}} defaultValue="Warren">
                       {['Warren', 'West', 'Marciano', 'Granby', 'Fenway'].map((option) => (
                         <MenuItem key={option} value={option}>
