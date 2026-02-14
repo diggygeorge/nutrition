@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb'
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Box from '@mui/material/Box';
@@ -100,7 +100,6 @@ const Food = () => {
                 <h1>Protein: {item.protein}g</h1>
               </Box>
               <Box className="w-[60%] relative">
-                <h1 className="pb-2 flex"><h1 className="font-bold pr-1">Station:</h1> {item.station}</h1>
                 {item.description !== "" ? <h1 className="pb-2">Description: {item.description}</h1> : <></>}
                 {item.ingredients !== "" ? <h1 className="pb-12">Ingredients: {item.ingredients}</h1> : <></>}
                 <Box className="absolute bottom-0 right-0">
@@ -263,14 +262,25 @@ const Food = () => {
         .then((res) => (res.json()))
         .then((data) => {
           setFoodItems(data)
-          setDate(data[0].date)
+          setDate(!date ? data[0].date : date)
         })
     }, [location, time, sort, isVegetarian, isVegan, isHalal, isGlutenfree, hasEgg, hasFish, hasMilk, hasPeanuts, hasShellfish, hasSoy, hasTreenuts, hasWheat])
+
+    
+    const groupedItems = useMemo(() => {
+      return fooditems.reduce((acc, item) => {
+        if (!acc[item.station]) {
+          acc[item.station] = [];
+        }
+        acc[item.station].push(item);
+        return acc;
+      }, {} as Record<string, FoodItem[]>);
+    }, [fooditems]);
 
     return (
       <SnackbarProvider maxSnack={3}>
       <title>MyFitnessTerrier</title>
-        <Box className="flex flex-col h-screen bg-white">
+        <Box className="flex flex-col h-screen bg-white overflow-hidden">
             <Box className="flex bg-[#be030f]">
               <h1 className="text-3xl text-white font-medium p-2">MyFitnessTerrier</h1>
               <Image src="/myfitnessterrierlogo.png" alt="logo" width={50} height={50}></Image>
@@ -357,11 +367,21 @@ const Food = () => {
                 </Box>
                 <Box className="overflow-y-auto">
                   <Box>
-                    <ul>
-                        {fooditems?.map((item) => (
-                              <AddToCartButton key = {item._id.toString()} item={item}/>
-                        ))}
-                    </ul>
+                    {Object.entries(groupedItems)?.map(([station, stationitems]) => (
+                      <Box key={station} className="flex flex-col mb-4">
+                        
+                        <Box className="mb-4 border-b-2 border-gray-300">
+                          <h2 className="text-md font-medium text-gray-800">{station}</h2>
+                        </Box>
+
+                        <Box className="flex flex-col">
+                          {stationitems?.map((item) => (
+                            <AddToCartButton key={item._id.toString()} item={item} />
+                          ))}
+                        </Box>
+                        
+                      </Box>
+                    ))}
                   </Box>
                   {fooditems.length === 0 ? (isVegetarian || isVegan || isHalal || isGlutenfree || hasEgg || hasFish || hasMilk || hasPeanuts || hasSesame || hasShellfish || hasSoy || hasTreenuts || hasWheat) ? <h1 className="font-body text-black pt-4">Sorry, no menu items meet these filters.  Please choose less or different restrictions.</h1> : <h1 className="font-body text-black pt-4">Sorry, there seems to be no menu items at the moment.  Please select a different dining hall or time.</h1> : <></>}
                 </Box>
